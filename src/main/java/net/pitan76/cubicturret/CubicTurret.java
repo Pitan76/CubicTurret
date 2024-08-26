@@ -7,21 +7,32 @@ import net.pitan76.cubicturret.item.Items;
 import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
 import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CubicTurret implements ModInitializer {
 
     public static final String MOD_NAME = "Cubic Turret";
     public static final String MOD_ID = "cubicturret";
 
+    private static final Logger LOGGER = LogManager.getLogger();
+
     public static final CompatRegistry registry = CompatRegistry.create(MOD_ID);
 
     @Override
     public void onInitialize() {
-        BlockEntities.init();
+        log(Level.INFO, "Initializing");
+
         Blocks.init();
         Items.init();
+        BlockEntities.init();
 
         registry.allRegister();
+    }
+
+    public static void log(Level level, String message){
+        LOGGER.log(level, "[" + MOD_NAME + "] " + message);
     }
 
     public static Identifier id(String path) {

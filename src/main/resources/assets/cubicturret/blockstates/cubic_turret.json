@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": {"model": "cubicturret:block/cubic_turret", "y": 0},
+    "facing=east": {"model": "cubicturret:block/cubic_turret", "y": 90},
+    "facing=south": {"model": "cubicturret:block/cubic_turret", "y": 180},
+    "facing=west": {"model": "cubicturret:block/cubic_turret", "y": 270}
+  }
+}
