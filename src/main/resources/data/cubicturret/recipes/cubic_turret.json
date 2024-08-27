@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "ROR",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "cubicturret:turret_base"
+    },
+    "O": {
+      "item": "minecraft:stone"
+    },
+    "C": {
+      "item": "minecraft:dispenser"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "cubicturret:cubic_turret",
+    "count": 1
+  }
+}

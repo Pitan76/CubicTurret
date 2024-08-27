@@ -3,13 +3,13 @@
   "id": "cubicturret",
   "version": "${version}",
   "name": "CubicTurret",
-  "description": "Add cubic turret",
+  "description": "A mod that adds turrets",
   "authors": [
-    "pitan76"
+    "Pitan"
   ],
   "contact": {
     "homepage": "https://curseforge.com/minecraft/mc-mods/cubicturret",
-    "sources": "https://github.com/PTOM76/CubicTurret"
+    "sources": "https://github.com/Pitan76/CubicTurret"
   },
   "license": "MIT",
   "icon": "assets/cubicturret/icon.png",

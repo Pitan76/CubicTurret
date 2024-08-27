@@ -12,10 +12,13 @@ import static net.pitan76.cubicturret.CubicTurret.registry;
 
 public class BlockEntities {
     public static RegistryResult<BlockEntityType<?>> CUBIC_TURRET;
+    public static RegistryResult<BlockEntityType<?>> DOUBLE_CUBIC_TURRET;
 
     public static void init() {
         CUBIC_TURRET = registry.registerBlockEntityType(id("cubic_turret"), () -> create(
-                CubicTurretBlockEntity::new, Blocks.TURRET_BLOCK.getOrNull()));
+                CubicTurretBlockEntity::new, Blocks.CUBIC_TURRET_BLOCK.getOrNull()));
+        DOUBLE_CUBIC_TURRET = registry.registerBlockEntityType(id("double_cubic_turret"), () -> create(
+                DoubleCubicTurretBlockEntity::new, Blocks.DOUBLE_CUBIC_TURRET_BLOCK.getOrNull()));
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {
