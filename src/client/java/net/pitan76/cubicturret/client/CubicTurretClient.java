@@ -14,7 +14,10 @@ public class CubicTurretClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        CompatRegistryClient.registerRenderTypeBlock(RenderLayer.getCutout(), Blocks.TURRET_BASE.getOrNull());
         CompatRegistryClient.registerRenderTypeBlock(RenderLayer.getCutout(), Blocks.CUBIC_TURRET_BLOCK.getOrNull());
+        CompatRegistryClient.registerRenderTypeBlock(RenderLayer.getCutout(), Blocks.DOUBLE_CUBIC_TURRET_BLOCK.getOrNull());
+
         CompatRegistryClient.registerEntityRenderer(() -> Entities.BULLET_ENTITY.get(), (ctx -> (EntityRenderer) new FlyingItemEntityRenderer<>(ctx)));
 
         CompatRegistryClient.registerScreen(ScreenHandlers.CUBIC_TURRET.getOrNull(), CubicTurretScreen::new);
