@@ -15,10 +15,7 @@ import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.ExtendBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
-import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
-import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
-import net.pitan76.mcpitanlib.api.event.block.CollisionShapeEvent;
-import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
+import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +47,12 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return BlockStateUtil.getDefaultState(this).with(FACING, ctx.getPlayer().getHorizontalFacing().getOpposite());
+    }
+
+    @Override
+    public void onStateReplaced(StateReplacedEvent e) {
+        e.spawnDropsInContainer();
+        super.onStateReplaced(e);
     }
 
     @Override
