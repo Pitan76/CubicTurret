@@ -1,6 +1,7 @@
 package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
@@ -26,15 +27,35 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
         ItemStack bulletStack = getBulletStack();
 
         if (bulletCount >= 2) {
-            if (shoot(e)) {
+            if (shoot(e, 1)) {
                 ItemStackUtil.decrementCount(bulletStack, 1);
             }
 
-            if (shoot(e)) {
+            if (shoot(e, -1)) {
                 ItemStackUtil.decrementCount(bulletStack, 1);
             }
-        } else if (shoot(e)) {
+        } else if (shoot(e, 1)) {
             ItemStackUtil.decrementCount(bulletStack, 1);
         }
+    }
+
+    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e, double shift) {
+        Entity target = getTargetEntity(e);
+        if (target == null) return false;
+
+        double dx = target.getX() - (e.pos.getX() + shift);
+        double dy = target.getY() - (e.pos.getY() + shift);
+        double dz = target.getZ() - (e.pos.getZ() + shift);
+
+        double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+        double vx = dx / distance;
+        double vy = dy / distance;
+        double vz = dz / distance;
+
+        float divergence = getDivergence();
+
+        shoot(e, vx, vy, vz, divergence);
+        return true;
     }
 }
