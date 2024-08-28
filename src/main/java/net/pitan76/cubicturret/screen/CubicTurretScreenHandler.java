@@ -36,12 +36,12 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
             if (index < 9) {
-                if (!this.insertItem(itemStack2, 9, 18, true)) {
-                    if (!this.insertItem(itemStack2, 18, 45, true)) {
+                if (!this.callInsertItem(itemStack2, 9, 18, true)) {
+                    if (!this.callInsertItem(itemStack2, 18, 45, true)) {
                         return ItemStack.EMPTY;
                     }
                 }
-            } else if (!this.insertItem(itemStack2, 0, 9, false)) {
+            } else if (!this.callInsertItem(itemStack2, 0, 9, false)) {
                 return ItemStack.EMPTY;
             }
 
