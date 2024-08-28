@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.cubicturret.entity.Entities;
+import net.pitan76.cubicturret.item.ItemGroups;
 import net.pitan76.cubicturret.item.Items;
 import net.pitan76.cubicturret.screen.ScreenHandlers;
 import net.pitan76.cubicturret.tile.BlockEntities;
@@ -26,6 +27,7 @@ public class CubicTurret implements ModInitializer {
     public void onInitialize() {
         log(Level.INFO, "Initializing");
 
+        ItemGroups.init();
         Blocks.init();
         Items.init();
         BlockEntities.init();

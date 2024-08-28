@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.mcpitanlib.api.item.CompatibleItemSettings;
-import net.pitan76.mcpitanlib.api.item.DefaultItemGroups;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import net.pitan76.mcpitanlib.api.util.ItemUtil;
 
@@ -32,7 +31,7 @@ public class Items {
     public static Item create(Block block) {
         return create(block, CompatibleItemSettings
                 .of()
-                .addGroup(DefaultItemGroups.FUNCTIONAL)
+                .addGroup(ItemGroups.CUBIC_TURRET)
         );
     }
 }

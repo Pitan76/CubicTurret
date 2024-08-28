@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "cubicturret:turret_base",
+    "cubicturret:cubic_turret",
+    "cubicturret:double_cubic_turret"
+  ]
+}
