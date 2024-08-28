@@ -16,5 +16,7 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         super.tick(e);
+
+        shoot();
     }
 }

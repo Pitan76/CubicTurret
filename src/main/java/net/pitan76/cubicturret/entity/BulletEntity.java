@@ -3,6 +3,7 @@ package net.pitan76.cubicturret.entity;
 import net.minecraft.item.Items;
 import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
 import net.pitan76.mcpitanlib.api.util.EntityUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -41,7 +42,7 @@ public class BulletEntity extends ThrownItemEntity {
 
     private ParticleEffect getParticleParameters() {
         ItemStack stack = this.getItem();
-        return new ItemStackParticleEffect(ParticleTypes.ITEM, stack.isEmpty() ? new ItemStack(getDefaultItem()) : stack);
+        return new ItemStackParticleEffect(ParticleTypes.ITEM, stack.isEmpty() ? ItemStackUtil.getDefaultStack(getDefaultItem()) : stack);
     }
 
     public void handleStatus(byte status) {

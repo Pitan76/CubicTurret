@@ -16,6 +16,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.pitan76.cubicturret.entity.BulletEntity;
+import net.pitan76.cubicturret.entity.Entities;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -25,6 +26,7 @@ import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
+import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import org.jetbrains.annotations.Nullable;
@@ -63,9 +65,10 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
         if (inventory.isEmpty()) return;
 
+        // if (e.world.getClosestPlayer(e.pos.getX(), e.pos.getY(), e.pos.getZ(), getBulletRange(), false) == null) return;
+
         ItemStack bulletStack = ItemStack.EMPTY;
-        for (int i = 0; i < inventory.size(); i++) {
-            ItemStack stack = inventory.get(i);
+        for (ItemStack stack : inventory) {
             if (stack.isEmpty()) continue;
             if (stack.getItem() != getBulletItem()) continue;
             bulletStack = stack;
@@ -74,10 +77,18 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
         if (bulletStack.isEmpty()) return;
 
-        List<Entity> list = getTargetEntities(e);
-        if (list.isEmpty()) return;
+        if (shoot(e)) {
+            ItemStackUtil.decrementCount(bulletStack, 1);
+        }
+    }
 
-        Entity target = list.get(0);
+    public float getDivergence() {
+        return 0.1F;
+    }
+
+    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e) {
+        Entity target = getTargetEntity(e);
+        if (target == null) return false;
 
         double dx = target.getX() - e.pos.getX();
         double dy = target.getY() - e.pos.getY();
@@ -89,20 +100,19 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         double vy = dy / distance;
         double vz = dz / distance;
 
-        float divergence = 0.1F;
+        float divergence = getDivergence();
 
-        bulletStack.decrement(1);
+        shoot(e, vx, vy, vz, divergence);
+        return true;
+    }
 
-        // 弾を生成
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence) {
         BulletEntity bullet = new BulletEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz, this);
-        bullet.setItem(new ItemStack(getBulletItem()));
+        bullet.setItem(ItemStackUtil.getDefaultStack(getBulletItem()));
         bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
         e.world.spawnEntity(bullet);
-
-        // if (e.world.getClosestPlayer(e.pos.getX(), e.pos.getY(), e.pos.getZ(), getBulletRange(), false) == null) return;
-
-
     }
+
     // 周辺の敵を取得
     public List<Entity> getTargetEntities(TileTickEvent<CubicTurretBlockEntity> e) {
         List<Entity> list = new ArrayList<>();
@@ -114,6 +124,13 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         list.addAll(e.world.getEntitiesByClass(MobEntity.class, box, Entity::isAlive));
 
         return list;
+    }
+
+    public Entity getTargetEntity(TileTickEvent<CubicTurretBlockEntity> e) {
+        List<Entity> list = getTargetEntities(e);
+        if (list.isEmpty()) return null;
+
+        return list.get(0);
     }
 
     // 発射速度
