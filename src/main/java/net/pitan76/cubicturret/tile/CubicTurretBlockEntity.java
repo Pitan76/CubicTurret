@@ -16,7 +16,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.pitan76.cubicturret.entity.BulletEntity;
-import net.pitan76.cubicturret.entity.Entities;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
@@ -62,24 +61,44 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         if (e.world.isClient) return;
         if (e.world.getTime() % getFireSpeed() != 0) return;
-
         if (inventory.isEmpty()) return;
 
         // if (e.world.getClosestPlayer(e.pos.getX(), e.pos.getY(), e.pos.getZ(), getBulletRange(), false) == null) return;
 
-        ItemStack bulletStack = ItemStack.EMPTY;
-        for (ItemStack stack : inventory) {
-            if (stack.isEmpty()) continue;
-            if (stack.getItem() != getBulletItem()) continue;
-            bulletStack = stack;
-            break;
-        }
-
-        if (bulletStack.isEmpty()) return;
+        if (!hasBulletStack()) return;
+        ItemStack bulletStack = getBulletStack();
 
         if (shoot(e)) {
             ItemStackUtil.decrementCount(bulletStack, 1);
         }
+    }
+
+    public boolean hasBulletStack() {
+        for (ItemStack stack : inventory) {
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() != getBulletItem()) continue;
+            return true;
+        }
+        return false;
+    }
+
+    public int getBulletAmount() {
+        int amount = 0;
+        for (ItemStack stack : inventory) {
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() != getBulletItem()) continue;
+            amount += stack.getCount();
+        }
+        return amount;
+    }
+
+    public ItemStack getBulletStack() {
+        for (ItemStack stack : inventory) {
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() != getBulletItem()) continue;
+            return stack;
+        }
+        return ItemStack.EMPTY;
     }
 
     public float getDivergence() {
