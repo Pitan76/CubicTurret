@@ -1,5 +1,7 @@
 {
   "block.cubicturret.turret_base": "Turret Base",
   "block.cubicturret.cubic_turret": "Cubic Turret",
-  "block.cubicturret.double_cubic_turret": "Double Cubic Turret"
+  "block.cubicturret.double_cubic_turret": "Double Cubic Turret",
+  "container.cubicturret.cubic_turret": "Turret Inventory",
+  "itemGroup.cubicturret.turrets": "Cubic Turret"
 }
