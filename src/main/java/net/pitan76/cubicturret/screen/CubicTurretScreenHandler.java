@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 
@@ -23,12 +24,40 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
         addSlots(inventory, 0, 62, 17, 18, 3, 3);
 
-        addPlayerMainInventorySlots(playerInventory, 8, 84);
         addPlayerHotbarSlots(playerInventory, 8, 142);
+        addPlayerMainInventorySlots(playerInventory, 8, 84);
     }
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        return super.quickMoveOverride(player, index);
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot.hasStack()) {
+            ItemStack itemStack2 = slot.getStack();
+            itemStack = itemStack2.copy();
+            if (index < 9) {
+                if (!this.insertItem(itemStack2, 9, 18, true)) {
+                    if (!this.insertItem(itemStack2, 18, 45, true)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else if (!this.insertItem(itemStack2, 0, 9, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemStack2.isEmpty()) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
+            }
+
+            if (itemStack2.getCount() == itemStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player.getEntity(), itemStack2);
+        }
+
+        return itemStack;
     }
 }
