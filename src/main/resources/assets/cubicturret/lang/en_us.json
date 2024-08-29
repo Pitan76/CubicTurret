@@ -2,6 +2,17 @@
   "block.cubicturret.turret_base": "Turret Base",
   "block.cubicturret.cubic_turret": "Cubic Turret",
   "block.cubicturret.double_cubic_turret": "Double Cubic Turret",
+  "block.cubicturret.cubic_turret_lv2": "Cubic Turret (Lv2)",
+  "block.cubicturret.double_cubic_turret_lv2": "Double Cubic Turret (Lv2)",
+  "block.cubicturret.cubic_turret_lv3": "Cubic Turret (Lv3)",
+  "block.cubicturret.double_cubic_turret_lv3": "Double Cubic Turret (Lv3)",
+  "block.cubicturret.cubic_turret_lv4": "Cubic Turret (Lv4)",
+  "block.cubicturret.double_cubic_turret_lv4": "Double Cubic Turret (Lv4)",
+  "block.cubicturret.cubic_turret_lv5": "Cubic Turret (Lv5)",
+  "block.cubicturret.double_cubic_turret_lv5": "Double Cubic Turret (Lv5)",
+  "block.cubicturret.cubic_turret_infinity": "Infinity Cubic Turret",
+  "block.cubicturret.double_cubic_turret_infinity": "Infinity Double Cubic Turret",
+
   "container.cubicturret.cubic_turret": "Turret Inventory",
   "itemGroup.cubicturret.turrets": "Cubic Turret"
 }

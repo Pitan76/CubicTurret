@@ -4,8 +4,8 @@
 	"textures": {
 		"0": "block/smooth_stone",
 		"1": "block/smooth_stone_slab_side",
-		"2": "block/green_terracotta",
-		"4": "block/green_wool",
+		"2": "block/black_concrete",
+		"4": "block/black_wool",
 		"5": "block/iron_block",
 		"6": "block/anvil_top",
 		"particle": "block/smooth_stone"

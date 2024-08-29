@@ -8,9 +8,13 @@ import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
 import org.jetbrains.annotations.Nullable;
 
-public class DoubleCubicTurretBlock extends AbstractCubicTurretBlock {
+public class DoubleCubicTurretBlock extends CubicTurretBlock {
     public DoubleCubicTurretBlock(CompatibleBlockSettings settings) {
-        super(settings);
+        this(settings, 1);
+    }
+
+    public DoubleCubicTurretBlock(CompatibleBlockSettings settings, int level) {
+        super(settings, level);
     }
 
     @Override

@@ -1,20 +1,28 @@
 package net.pitan76.cubicturret.tile;
 
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPointerImpl;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.event.GameEvent;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
@@ -31,6 +39,7 @@ import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, SidedInventory, IInventory {
@@ -68,7 +77,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (!hasBulletStack()) return;
         ItemStack bulletStack = getBulletStack();
 
-        if (shoot(e)) {
+        if (shoot(e, bulletStack)) {
             ItemStackUtil.decrementCount(bulletStack, 1);
         }
     }
@@ -76,7 +85,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public boolean hasBulletStack() {
         for (ItemStack stack : inventory) {
             if (stack.isEmpty()) continue;
-            if (stack.getItem() != getBulletItem()) continue;
+            if (!isBulletItem(stack.getItem())) continue;
             return true;
         }
         return false;
@@ -86,7 +95,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         int amount = 0;
         for (ItemStack stack : inventory) {
             if (stack.isEmpty()) continue;
-            if (stack.getItem() != getBulletItem()) continue;
+            if (!isBulletItem(stack.getItem())) continue;
             amount += stack.getCount();
         }
         return amount;
@@ -95,7 +104,8 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public ItemStack getBulletStack() {
         for (ItemStack stack : inventory) {
             if (stack.isEmpty()) continue;
-            if (stack.getItem() != getBulletItem()) continue;
+            if (!isBulletItem(stack.getItem())) continue;
+
             return stack;
         }
         return ItemStack.EMPTY;
@@ -105,7 +115,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         return 0.1F;
     }
 
-    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e) {
+    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e, ItemStack bulletStack) {
         Entity target = getTargetEntity(e);
         if (target == null) return false;
 
@@ -121,13 +131,33 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
         float divergence = getDivergence();
 
-        shoot(e, vx, vy, vz, divergence);
+        shoot(e, vx, vy, vz, divergence, bulletStack);
         return true;
     }
 
-    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence) {
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
+        if (bulletStack.getItem() instanceof FireChargeItem) {
+            FireballEntity fireball = new FireballEntity(e.world, null, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz, 1);
+            fireball.setItem(bulletStack);
+            fireball.setVelocity(vx, vy, vz);
+            e.world.spawnEntity(fireball);
+            return;
+        }
+        if (bulletStack.getItem() instanceof ArrowItem) {
+            ArrowEntity arrow = new ArrowEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz);
+            arrow.initFromStack(bulletStack);
+            arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
+            e.world.spawnEntity(arrow);
+            return;
+        }
+        if (bulletStack.getItem() instanceof SpectralArrowItem) {
+            SpectralArrowEntity arrow = new SpectralArrowEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz);
+            arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
+            e.world.spawnEntity(arrow);
+            return;
+        }
         BulletEntity bullet = new BulletEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz, this);
-        bullet.setItem(ItemStackUtil.getDefaultStack(getBulletItem()));
+        bullet.setItem(bulletStack);
         bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
         e.world.spawnEntity(bullet);
     }
@@ -173,8 +203,12 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     // 弾のアイテム
-    public Item getBulletItem() {
-        return Items.FIRE_CHARGE;
+    public Item[] getBulletItems() {
+        return new Item[]{Items.FIRE_CHARGE, Items.ARROW};
+    }
+
+    public boolean isBulletItem(Item item) {
+        return Arrays.stream(getBulletItems()).toList().contains(item);
     }
 
     @Override
