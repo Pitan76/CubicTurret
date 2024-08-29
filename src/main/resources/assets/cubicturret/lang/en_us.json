@@ -16,11 +16,11 @@
   "container.cubicturret.cubic_turret": "Turret Inventory",
   "itemGroup.cubicturret.turrets": "Cubic Turret",
 
-  "targetmode.cubicturret.animal": "[Cubic Turret] Toggled to Animal attack mode",
-  "targetmode.cubicturret.monster": "[Cubic Turret] Toggled to Monster attack mode",
-  "targetmode.cubicturret.player": "[Cubic Turret] Toggled to Player attack mode",
-  "targetmode.cubicturret.non_player": "[Cubic Turret] Toggled to Non-Player attack mode",
-  "targetmode.cubicturret.phantom_only": "[Cubic Turret] Toggled to Phantom attack mode",
-  "targetmode.cubicturret.all": "[Cubic Turret] Toggled to All attack mode",
-  "targetmode.cubicturret.none": "[Cubic Turret] Disabled attack mode"
+  "targetmode.cubicturret.animal": "§6[§dCubic Turret§6] §bToggled to Animal attack mode",
+  "targetmode.cubicturret.monster": "§6[§dCubic Turret§6] §bToggled to Monster attack mode",
+  "targetmode.cubicturret.player": "§6[§dCubic Turret§6] §bToggled to Player attack mode",
+  "targetmode.cubicturret.non_player": "§6[§dCubic Turret§6] §bToggled to Non-Player attack mode",
+  "targetmode.cubicturret.phantom_only": "§6[§dCubic Turret§6] §bToggled to Phantom attack mode",
+  "targetmode.cubicturret.all": "§6[§dCubic Turret§6] §bToggled to All attack mode",
+  "targetmode.cubicturret.none": "§6[§dCubic Turret§6] §bDisabled attack mode"
 }
