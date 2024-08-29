@@ -84,7 +84,6 @@ public class BulletEntity extends ThrownItemEntity {
 
     @Override
     protected Item getDefaultItem() {
-        if (turret == null) return Items.FIRE_CHARGE;
-        return turret.getBulletItem();
+        return Items.FIRE_CHARGE;
     }
 }
