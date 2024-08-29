@@ -149,27 +149,31 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
+        shoot(e, e.pos.getX() + 0.5, e.pos.getY() + 0.8, e.pos.getZ() + 0.5, vx, vy, vz, divergence, bulletStack);
+    }
+
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
         if (bulletStack.getItem() instanceof FireChargeItem) {
-            FireballEntity fireball = new FireballEntity(e.world, null, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz, 1);
+            FireballEntity fireball = new FireballEntity(e.world, null, x + vx, y + vy, z + vz, 1);
             fireball.setItem(bulletStack);
             fireball.setVelocity(vx, vy, vz);
             e.world.spawnEntity(fireball);
             return;
         }
         if (bulletStack.getItem() instanceof ArrowItem) {
-            ArrowEntity arrow = new ArrowEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz);
+            ArrowEntity arrow = new ArrowEntity(e.world, x + vx, y + vy, z + vz);
             arrow.initFromStack(bulletStack);
             arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
             e.world.spawnEntity(arrow);
             return;
         }
         if (bulletStack.getItem() instanceof SpectralArrowItem) {
-            SpectralArrowEntity arrow = new SpectralArrowEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz);
+            SpectralArrowEntity arrow = new SpectralArrowEntity(e.world, x + vx, y + vy, z + vz);
             arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
             e.world.spawnEntity(arrow);
             return;
         }
-        BulletEntity bullet = new BulletEntity(e.world, e.pos.getX() + 0.5 + vx, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz, this);
+        BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
         bullet.setItem(bulletStack);
         bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
         e.world.spawnEntity(bullet);

@@ -1,10 +1,18 @@
 package net.pitan76.cubicturret.tile;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.SpectralArrowEntity;
+import net.minecraft.item.ArrowItem;
+import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpectralArrowItem;
 import net.minecraft.util.math.Direction;
 import net.pitan76.cubicturret.block.AbstractCubicTurretBlock;
+import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
@@ -25,24 +33,32 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
         if (e.world.getTime() % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
+        if (level == 0) {
+            Block block = e.world.getBlockState(e.pos).getBlock();
+            if (block instanceof CubicTurretBlock) {
+                level = ((CubicTurretBlock) block).getLevel();
+                if (level == 0) level = 1;
+            }
+        }
+
         if (!hasBulletStack()) return;
         int bulletCount = getBulletAmount();
         ItemStack bulletStack = getBulletStack();
 
         if (bulletCount >= 2) {
-            if (shoot(e, 0.2)) {
+            if (shoot(e, 0.2, bulletStack) && level != -1) {
                 ItemStackUtil.decrementCount(bulletStack, 1);
             }
 
-            if (shoot(e, -0.2)) {
+            if (shoot(e, -0.2, bulletStack) && level != -1) {
                 ItemStackUtil.decrementCount(bulletStack, 1);
             }
-        } else if (shoot(e, 0.2)) {
+        } else if (shoot(e, 0.2, bulletStack) && level != -1) {
             ItemStackUtil.decrementCount(bulletStack, 1);
         }
     }
 
-    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e, double shift) {
+    public boolean shoot(TileTickEvent<CubicTurretBlockEntity> e, double shift, ItemStack bulletStack) {
         Entity target = getTargetEntity(e);
         if (target == null) return false;
 
@@ -58,11 +74,11 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
 
         float divergence = getDivergence();
 
-        shoot(e, vx, vy, vz, divergence, shift);
+        shoot(e, vx, vy, vz, divergence, shift, bulletStack);
         return true;
     }
 
-    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, double shift) {
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, double shift, ItemStack bulletStack) {
         double shiftX = 0;
         double shiftZ = 0;
         
@@ -82,9 +98,6 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
                 break;
         }
 
-        BulletEntity bullet = new BulletEntity(e.world, e.pos.getX() + 0.5 + vx + shiftX, e.pos.getY() + 0.8 + vy, e.pos.getZ() + 0.5 + vz + shiftZ, this);
-        bullet.setItem(ItemStackUtil.getDefaultStack(getBulletItem()));
-        bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
-        e.world.spawnEntity(bullet);
+        shoot(e, e.pos.getX() + 0.5 + shiftX, e.pos.getY() + 0.8, e.pos.getZ() + 0.5 + shiftZ, vx, vy, vz, divergence, bulletStack);
     }
 }
