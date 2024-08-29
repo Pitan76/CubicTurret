@@ -16,11 +16,11 @@
   "container.cubicturret.cubic_turret": "タレット インベントリ",
   "itemGroup.cubicturret.turrets": "Cubic Turret",
 
-  "togglemode.cubicturret.animal": "[Cubic Turret] 動物攻撃モードに切り替えました",
-  "togglemode.cubicturret.monster": "[Cubic Turret] モンスター攻撃モードに切り替えました",
-  "togglemode.cubicturret.player": "[Cubic Turret] プレイヤー攻撃モードに切り替えました",
-  "togglemode.cubicturret.non_player": "[Cubic Turret] 非プレイヤー攻撃モードに切り替えました",
-  "togglemode.cubicturret.phantom_only": "[Cubic Turret] ファントム攻撃モードに切り替えました",
-  "togglemode.cubicturret.all": "[Cubic Turret] 全て攻撃モードに切り替えました",
-  "togglemode.cubicturret.none": "[Cubic Turret] 攻撃モードを無効にしました"
+  "targetmode.cubicturret.animal": "[Cubic Turret] 動物攻撃モードに切り替えました",
+  "targetmode.cubicturret.monster": "[Cubic Turret] モンスター攻撃モードに切り替えました",
+  "targetmode.cubicturret.player": "[Cubic Turret] プレイヤー攻撃モードに切り替えました",
+  "targetmode.cubicturret.non_player": "[Cubic Turret] 非プレイヤー攻撃モードに切り替えました",
+  "targetmode.cubicturret.phantom_only": "[Cubic Turret] ファントム攻撃モードに切り替えました",
+  "targetmode.cubicturret.all": "[Cubic Turret] 全て攻撃モードに切り替えました",
+  "targetmode.cubicturret.none": "[Cubic Turret] 攻撃モードを無効にしました"
 }
