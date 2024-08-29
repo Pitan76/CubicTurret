@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IRI",
+    "ITI",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:gold_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "T": {
+      "item": "cubicturret:cubic_turret_lv2"
+    }
+  },
+  "result": {
+    "item": "cubicturret:cubic_turret_lv3",
+    "count": 1
+  }
+}

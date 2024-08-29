@@ -11,6 +11,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
+import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -174,6 +175,13 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
             e.world.spawnEntity(arrow);
             return;
         }
+        if (bulletStack.getItem() instanceof SnowballItem) {
+            SnowballEntity snowball = new SnowballEntity(e.world, x + vx, y + vy, z + vz);
+            snowball.setItem(bulletStack);
+            snowball.setVelocity(vx, vy, vz);
+            e.world.spawnEntity(snowball);
+            return;
+        }
         BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
         bullet.setItem(bulletStack);
         bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
@@ -252,7 +260,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     // 弾のアイテム
     public Item[] getBulletItems() {
-        return new Item[]{Items.FIRE_CHARGE, Items.ARROW};
+        return new Item[]{Items.FIRE_CHARGE, Items.ARROW, Items.TIPPED_ARROW, Items.SPECTRAL_ARROW, Items.SNOWBALL, net.pitan76.cubicturret.item.Items.TURRET_BULLET_ITEM.getOrNull()};
     }
 
     public boolean isBulletItem(Item item) {

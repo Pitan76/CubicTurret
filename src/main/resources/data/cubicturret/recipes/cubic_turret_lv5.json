@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IRI",
+    "ITI",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:emerald"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "T": {
+      "item": "cubicturret:cubic_turret_lv4"
+    }
+  },
+  "result": {
+    "item": "cubicturret:cubic_turret_lv5",
+    "count": 1
+  }
+}

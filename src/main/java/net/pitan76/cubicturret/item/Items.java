@@ -32,6 +32,8 @@ public class Items {
     public static RegistryResult<Item> CUBIC_TURRET_INF_ITEM;
     public static RegistryResult<Item> DOUBLE_CUBIC_TURRET_INF_ITEM;
 
+    public static RegistryResult<Item> TURRET_BULLET_ITEM;
+
     public static void init() {
         TURRET_BASE_ITEM = registry.registerItem(id("turret_base"), () -> create(Blocks.TURRET_BASE.getOrNull()));
 
@@ -52,6 +54,8 @@ public class Items {
 
         CUBIC_TURRET_INF_ITEM = registry.registerItem(id("cubic_turret_infinity"), () -> create(Blocks.CUBIC_TURRET_INF_BLOCK.getOrNull()));
         DOUBLE_CUBIC_TURRET_INF_ITEM = registry.registerItem(id("double_cubic_turret_infinity"), () -> create(Blocks.DOUBLE_CUBIC_TURRET_INF_BLOCK.getOrNull()));
+
+        TURRET_BULLET_ITEM = registry.registerItem(id("turret_bullet"), () -> ItemUtil.of(CompatibleItemSettings.of().addGroup(ItemGroups.CUBIC_TURRET)));
     }
 
     public static Item create(Block block, CompatibleItemSettings settings) {

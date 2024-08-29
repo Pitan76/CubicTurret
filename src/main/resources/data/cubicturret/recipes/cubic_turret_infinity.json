@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NEN",
+    "EIE",
+    "NEN"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "E": {
+      "item": "minecraft:emerald_block"
+    },
+    "I": {
+      "item": "cubicturret:cubic_turret_lv5"
+    }
+  },
+  "result": {
+    "item": "cubicturret:cubic_turret_infinity",
+    "count": 1
+  }
+}
