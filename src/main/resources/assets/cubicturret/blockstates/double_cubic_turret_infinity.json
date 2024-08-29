@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": {"model": "cubicturret:block/double_cubic_turret_infinity", "y": 0},
+    "facing=east": {"model": "cubicturret:block/double_cubic_turret_infinity", "y": 90},
+    "facing=south": {"model": "cubicturret:block/double_cubic_turret_infinity", "y": 180},
+    "facing=west": {"model": "cubicturret:block/double_cubic_turret_infinity", "y": 270}
+  }
+}

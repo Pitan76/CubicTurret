@@ -16,9 +16,24 @@ public class BlockEntities {
 
     public static void init() {
         CUBIC_TURRET = registry.registerBlockEntityType(id("cubic_turret"), () -> create(
-                CubicTurretBlockEntity::new, Blocks.CUBIC_TURRET_BLOCK.getOrNull()));
+                CubicTurretBlockEntity::new,
+                Blocks.CUBIC_TURRET_BLOCK.getOrNull(),
+                Blocks.CUBIC_TURRET_LV2_BLOCK.getOrNull(),
+                Blocks.CUBIC_TURRET_LV3_BLOCK.getOrNull(),
+                Blocks.CUBIC_TURRET_LV4_BLOCK.getOrNull(),
+                Blocks.CUBIC_TURRET_LV5_BLOCK.getOrNull(),
+                Blocks.CUBIC_TURRET_INF_BLOCK.getOrNull()
+        ));
         DOUBLE_CUBIC_TURRET = registry.registerBlockEntityType(id("double_cubic_turret"), () -> create(
-                DoubleCubicTurretBlockEntity::new, Blocks.DOUBLE_CUBIC_TURRET_BLOCK.getOrNull()));
+                DoubleCubicTurretBlockEntity::new,
+                Blocks.DOUBLE_CUBIC_TURRET_BLOCK.getOrNull(),
+                Blocks.DOUBLE_CUBIC_TURRET_LV2_BLOCK.getOrNull(),
+                Blocks.DOUBLE_CUBIC_TURRET_LV3_BLOCK.getOrNull(),
+                Blocks.DOUBLE_CUBIC_TURRET_LV4_BLOCK.getOrNull(),
+                Blocks.DOUBLE_CUBIC_TURRET_LV5_BLOCK.getOrNull(),
+                Blocks.DOUBLE_CUBIC_TURRET_INF_BLOCK.getOrNull()
+
+        ));
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> create(BlockEntityTypeBuilder.Factory<T> supplier, Block... blocks) {

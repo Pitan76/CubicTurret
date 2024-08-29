@@ -1,6 +1,7 @@
 package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -8,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
@@ -153,7 +155,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
         if (bulletStack.getItem() instanceof FireChargeItem) {
-            FireballEntity fireball = new FireballEntity(e.world, null, x + vx, y + vy, z + vz, 1);
+            SmallFireballEntity fireball = new SmallFireballEntity(e.world, x + vx, y + vy, z + vz, vx, vy, vz);
             fireball.setItem(bulletStack);
             fireball.setVelocity(vx, vy, vz);
             e.world.spawnEntity(fireball);

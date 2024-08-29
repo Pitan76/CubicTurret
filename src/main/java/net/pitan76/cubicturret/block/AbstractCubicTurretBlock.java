@@ -90,7 +90,6 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
                 VoxelShapes.cuboid(0.4375, 0.8125, 0.5, 0.5625, 1, 0.5625),
                 VoxelShapes.cuboid(0.4375, 0.8125, 0.4375, 0.5625, 0.9375, 0.5));
 
-
         switch (direction) {
             case SOUTH:
                 cannon = VoxelShapes.union(VoxelShapes.cuboid(0.4375, 0.875, 0.25, 0.5625, 0.9375, 0.4375),
