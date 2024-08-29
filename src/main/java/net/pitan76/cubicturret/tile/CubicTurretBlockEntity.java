@@ -1,10 +1,9 @@
 package net.pitan76.cubicturret.tile;
 
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.DispenserBehavior;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,16 +14,15 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPointerImpl;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.event.GameEvent;
+import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
+import net.pitan76.cubicturret.turret.TargetMode;
+import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
@@ -34,6 +32,7 @@ import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
 import net.pitan76.mcpitanlib.api.util.InventoryUtil;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.NbtUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import org.jetbrains.annotations.Nullable;
@@ -43,6 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, SidedInventory, IInventory {
+
+    public int level = 0;
 
     public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
@@ -58,12 +59,16 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
         InventoryUtil.writeNbt(args, inventory);
+        if (level != 0)
+            NbtUtil.set(args.nbt, "level", level);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
         InventoryUtil.readNbt(args, inventory);
+        if (NbtUtil.has(args.nbt, "level"))
+            level = NbtUtil.get(args.nbt, "level", Integer.class);
     }
 
     @Override
@@ -72,12 +77,20 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (e.world.getTime() % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
+        if (level == 0) {
+            Block block = e.world.getBlockState(e.pos).getBlock();
+            if (block instanceof CubicTurretBlock) {
+                level = ((CubicTurretBlock) block).getLevel();
+                if (level == 0) level = 1;
+            }
+        }
+
         // if (e.world.getClosestPlayer(e.pos.getX(), e.pos.getY(), e.pos.getZ(), getBulletRange(), false) == null) return;
 
         if (!hasBulletStack()) return;
         ItemStack bulletStack = getBulletStack();
 
-        if (shoot(e, bulletStack)) {
+        if (shoot(e, bulletStack) && level != -1) {
             ItemStackUtil.decrementCount(bulletStack, 1);
         }
     }
@@ -165,12 +178,18 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     // 周辺の敵を取得
     public List<Entity> getTargetEntities(TileTickEvent<CubicTurretBlockEntity> e) {
         List<Entity> list = new ArrayList<>();
+        if (targetMode == TargetMode.NONE) return new ArrayList<>();
 
         // MobEntity
-        Box box = BoxUtil.createBox(e.pos.getX() - getShootRange(), e.pos.getY() - getShootRange(), e.pos.getZ() - getShootRange(),
-                e.pos.getX() + getShootRange(), e.pos.getY() + getShootRange(), e.pos.getZ() + getShootRange());
+        Box box = BoxUtil.createBox(e.pos.getX() - getShootRange(), e.pos.getY() - getShootBottom(), e.pos.getZ() - getShootRange(),
+                e.pos.getX() + getShootRange(), e.pos.getY() + getShootTop(), e.pos.getZ() + getShootRange());
 
-        list.addAll(e.world.getEntitiesByClass(MobEntity.class, box, Entity::isAlive));
+        list.addAll(e.world.getEntitiesByClass(LivingEntity.class, box, Entity::isAlive));
+
+        if (targetMode == TargetMode.ALL) return list;
+
+        if (!list.isEmpty())
+            list.removeIf(entity -> !targetMode.isTarget(entity));
 
         return list;
     }
@@ -184,10 +203,14 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     // 発射速度
     public int getFireSpeed() {
-        return 20;
+        if (level == 1) return 30;
+        if (level == 2) return 25;
+        if (level == 3) return 20;
+        if (level == 4) return 15;
+        return 10;
     }
 
-    // 弾のダメージ
+    // 弾のダメージ (矢や火炎玉などの場合は無視)
     public int getShootDamage() {
         return 3;
     }
@@ -199,7 +222,27 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     // 弾の範囲
     public double getShootRange() {
-        return 8.0;
+        if (level == 1) return 8.0;
+        if (level == 2) return 10.0;
+        if (level == 3) return 12.0;
+        if (level == 4) return 15.0;
+        return 18.0;
+    }
+
+    public double getShootTop() {
+        if (level == 1) return 12.0;
+        if (level == 2) return 15.0;
+        if (level == 3) return 18.0;
+        if (level == 4) return 20.0;
+        return 24.0;
+    }
+
+    public double getShootBottom() {
+        if (level == 1) return 0.0;
+        if (level == 2) return 1.0;
+        if (level == 3) return 2.0;
+        if (level == 4) return 4.0;
+        return 6.0;
     }
 
     // 弾のアイテム
@@ -243,5 +286,18 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventory;
+    }
+
+    public TargetMode targetMode = TargetMode.MONSTER;
+
+    public void toggle(@Nullable Player player) {
+        targetMode = targetMode.next();
+        if (player != null) {
+            player.sendMessage(targetMode.getTranslation());
+        }
+    }
+
+    public void toggle() {
+        toggle(null);
     }
 }

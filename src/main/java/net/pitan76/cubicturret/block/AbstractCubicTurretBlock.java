@@ -61,13 +61,18 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
         if (!e.hasBlockEntity()) return ActionResult.PASS;
 
         BlockEntity blockEntity = e.getBlockEntity();
-        if (blockEntity instanceof CubicTurretBlockEntity) {
-            CubicTurretBlockEntity tile = (CubicTurretBlockEntity)blockEntity;
-            e.player.openMenu(tile);
+        if (!(blockEntity instanceof CubicTurretBlockEntity)) return super.onRightClick(e);
+
+        CubicTurretBlockEntity tile = (CubicTurretBlockEntity)blockEntity;
+
+        if (e.player.isSneaking()) {
+            tile.toggle(e.player);
             return ActionResult.CONSUME;
         }
 
-        return super.onRightClick(e);
+        e.player.openMenu(tile);
+
+        return ActionResult.CONSUME;
     }
 
     @Override
