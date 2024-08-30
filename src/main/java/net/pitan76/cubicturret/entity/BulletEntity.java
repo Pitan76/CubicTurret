@@ -1,5 +1,6 @@
 package net.pitan76.cubicturret.entity;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
 import net.pitan76.mcpitanlib.api.entity.CompatThrownItemEntity;
@@ -62,8 +63,10 @@ public class BulletEntity extends CompatThrownItemEntity {
         super.onEntityHit(e);
         Entity entity = e.getEntity();
         if (turret == null) return;
+        if (!turret.targetMode.isTarget(entity)) return;
 
         EntityUtil.damageWithThrownProjectile(entity, turret.getShootDamage() + getAddedDamage(), this, this.owner == null ? this : this.owner);
+        EntityUtil.discard(this);
     }
 
     public float getAddedDamage() {
@@ -77,6 +80,7 @@ public class BulletEntity extends CompatThrownItemEntity {
     @Override
     public void onCollision(CollisionEvent e) {
         super.onCollision(e);
+
         World world = EntityUtil.getWorld(this);
         if (world != null && !WorldUtil.isClient(world)) {
             WorldUtil.sendEntityStatus(world, this, (byte)3);

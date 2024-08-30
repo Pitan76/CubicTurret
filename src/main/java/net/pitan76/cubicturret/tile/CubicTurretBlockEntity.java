@@ -183,7 +183,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         }
         BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
         bullet.callSetItem(bulletStack);
-        bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
+        bullet.setVelocity(vx, vy, vz, getBulletSpeed() + 2.0f, divergence);
         WorldUtil.spawnEntity(e.world, bullet);
     }
 
@@ -229,7 +229,11 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     // 弾の速度
     public float getBulletSpeed() {
-        return 1.0f;
+        if (level == 1) return 1.0f;
+        if (level == 2) return 1.2f;
+        if (level == 3) return 1.5f;
+        if (level == 4) return 2.0f;
+        return 3.0f;
     }
 
     // 弾の範囲
