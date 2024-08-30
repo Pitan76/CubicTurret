@@ -12,9 +12,6 @@
     "R": {
       "item": "minecraft:redstone"
     },
-    "G": {
-      "item": "minecraft:gunpowder"
-    },
     "T": {
       "item": "cubicturret:double_cubic_turret"
     }
