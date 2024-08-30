@@ -4,9 +4,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.util.VoxelShapeUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class DoubleCubicTurretBlock extends CubicTurretBlock {
@@ -20,49 +20,49 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
 
     @Override
     public VoxelShape getShape(Direction direction) {
-
-        VoxelShape cannon = VoxelShapes.union(
-                VoxelShapes.cuboid(0.375, 0.875, 0.5625, 0.4375, 0.9375, 0.75),
-                VoxelShapes.cuboid(0.375, 0.8125, 0.5, 0.4375, 1, 0.5625),
-                VoxelShapes.cuboid(0.375, 0.8125, 0.4375, 0.4375, 0.9375, 0.5),
-                VoxelShapes.cuboid(0.5625, 0.875, 0.5625, 0.625, 0.9375, 0.75),
-                VoxelShapes.cuboid(0.5625, 0.8125, 0.5, 0.625, 1, 0.5625),
-                VoxelShapes.cuboid(0.5625, 0.8125, 0.4375, 0.625, 0.9375, 0.5));
+        VoxelShape cannon = VoxelShapeUtil.union(
+                VoxelShapeUtil.cuboid(0.375, 0.875, 0.5625, 0.4375, 0.9375, 0.75),
+                VoxelShapeUtil.cuboid(0.375, 0.8125, 0.5, 0.4375, 1, 0.5625),
+                VoxelShapeUtil.cuboid(0.375, 0.8125, 0.4375, 0.4375, 0.9375, 0.5),
+                VoxelShapeUtil.cuboid(0.5625, 0.875, 0.5625, 0.625, 0.9375, 0.75),
+                VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.5, 0.625, 1, 0.5625),
+                VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.4375, 0.625, 0.9375, 0.5));
 
         switch (direction) {
             case SOUTH:
-                cannon = VoxelShapes.union(
-                        VoxelShapes.cuboid(0.375, 0.875, 0.25, 0.4375, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.375, 0.8125, 0.4375, 0.4375, 1, 0.5),
-                        VoxelShapes.cuboid(0.375, 0.8125, 0.5, 0.4375, 0.9375, 0.5625),
-                        VoxelShapes.cuboid(0.5625, 0.875, 0.25, 0.625, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.5625, 0.8125, 0.4375, 0.625, 1, 0.5),
-                        VoxelShapes.cuboid(0.5625, 0.8125, 0.5, 0.625, 0.9375, 0.5625));
+                cannon = VoxelShapeUtil.union(
+                        VoxelShapeUtil.cuboid(0.375, 0.875, 0.25, 0.4375, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.375, 0.8125, 0.4375, 0.4375, 1, 0.5),
+                        VoxelShapeUtil.cuboid(0.375, 0.8125, 0.5, 0.4375, 0.9375, 0.5625),
+                        VoxelShapeUtil.cuboid(0.5625, 0.875, 0.25, 0.625, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.4375, 0.625, 1, 0.5),
+                        VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.5, 0.625, 0.9375, 0.5625));
                 break;
             case EAST:
-                cannon = VoxelShapes.union(
-                        VoxelShapes.cuboid(0.25, 0.875, 0.375, 0.4375, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.4375, 0.8125, 0.375, 0.5, 1, 0.4375),
-                        VoxelShapes.cuboid(0.5, 0.8125, 0.375, 0.5625, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.25, 0.875, 0.5625, 0.4375, 0.9375, 0.625),
-                        VoxelShapes.cuboid(0.4375, 0.8125, 0.5625, 0.5, 1, 0.625),
-                        VoxelShapes.cuboid(0.5, 0.8125, 0.5625, 0.5625, 0.9375, 0.625));
+                cannon = VoxelShapeUtil.union(
+                        VoxelShapeUtil.cuboid(0.25, 0.875, 0.375, 0.4375, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.375, 0.5, 1, 0.4375),
+                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.375, 0.5625, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.25, 0.875, 0.5625, 0.4375, 0.9375, 0.625),
+                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5625, 0.5, 1, 0.625),
+                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.5625, 0.5625, 0.9375, 0.625));
                 break;
             case WEST:
-                cannon = VoxelShapes.union(
-                        VoxelShapes.cuboid(0.5625, 0.875, 0.375, 0.75, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.5, 0.8125, 0.375, 0.5625, 1, 0.4375),
-                        VoxelShapes.cuboid(0.4375, 0.8125, 0.375, 0.5, 0.9375, 0.4375),
-                        VoxelShapes.cuboid(0.5625, 0.875, 0.5625, 0.75, 0.9375, 0.625),
-                        VoxelShapes.cuboid(0.5, 0.8125, 0.5625, 0.5625, 1, 0.625),
-                        VoxelShapes.cuboid(0.4375, 0.8125, 0.5625, 0.5, 0.9375, 0.625));
+                cannon = VoxelShapeUtil.union(
+                        VoxelShapeUtil.cuboid(0.5625, 0.875, 0.375, 0.75, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.375, 0.5625, 1, 0.4375),
+                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.375, 0.5, 0.9375, 0.4375),
+                        VoxelShapeUtil.cuboid(0.5625, 0.875, 0.5625, 0.75, 0.9375, 0.625),
+                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.5625, 0.5625, 1, 0.625),
+                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5625, 0.5, 0.9375, 0.625));
                 break;
         }
-        return VoxelShapes.union(
-                VoxelShapes.cuboid(0, 0, 0, 1, 0.0625, 1),
-                VoxelShapes.cuboid(0.1875, 0.0625, 0.1875, 0.8125, 0.625, 0.8125),
-                VoxelShapes.cuboid(0.3125, 0.625, 0.3125, 0.6875, 0.6875, 0.6875),
-                VoxelShapes.cuboid(0.375, 0.6875, 0.375, 0.625, 0.8125, 0.625),
+
+        return VoxelShapeUtil.union(
+                VoxelShapeUtil.cuboid(0, 0, 0, 1, 0.0625, 1),
+                VoxelShapeUtil.cuboid(0.1875, 0.0625, 0.1875, 0.8125, 0.625, 0.8125),
+                VoxelShapeUtil.cuboid(0.3125, 0.625, 0.3125, 0.6875, 0.6875, 0.6875),
+                VoxelShapeUtil.cuboid(0.375, 0.6875, 0.375, 0.625, 0.8125, 0.625),
                 cannon
         );
     }
