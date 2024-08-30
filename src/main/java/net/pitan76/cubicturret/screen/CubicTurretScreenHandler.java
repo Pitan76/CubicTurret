@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
+import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
+import net.pitan76.mcpitanlib.api.util.SlotUtil;
 
 public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
@@ -31,9 +33,9 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+        Slot slot = ScreenHandlerUtil.getSlot(this, index);
         if (slot.hasStack()) {
-            ItemStack itemStack2 = slot.getStack();
+            ItemStack itemStack2 = SlotUtil.getStack(slot);
             itemStack = itemStack2.copy();
             if (index < 9) {
                 if (!this.callInsertItem(itemStack2, 9, 18, true)) {
@@ -46,7 +48,7 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
             }
 
             if (itemStack2.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                SlotUtil.setStack(slot, ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }
