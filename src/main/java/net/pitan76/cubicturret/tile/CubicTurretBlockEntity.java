@@ -1,14 +1,12 @@
 package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
@@ -32,10 +30,11 @@ import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
-import net.pitan76.mcpitanlib.api.util.InventoryUtil;
-import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
-import net.pitan76.mcpitanlib.api.util.NbtUtil;
-import net.pitan76.mcpitanlib.api.util.TextUtil;
+import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.entity.ArrowEntityUtil;
+import net.pitan76.mcpitanlib.api.util.entity.SmallFireballEntityUtil;
+import net.pitan76.mcpitanlib.api.util.entity.SnowballEntityUtil;
+import net.pitan76.mcpitanlib.api.util.entity.SpectralArrowEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -156,37 +155,36 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
-        if (bulletStack.getItem() instanceof FireChargeItem) {
-            SmallFireballEntity fireball = new SmallFireballEntity(e.world, x + vx, y + vy, z + vz, vx, vy, vz);
-            fireball.setItem(bulletStack);
-            fireball.setVelocity(vx, vy, vz);
-            e.world.spawnEntity(fireball);
+        Item item = bulletStack.getItem();
+        if (item instanceof FireChargeItem) {
+            SmallFireballEntity fireball = SmallFireballEntityUtil.create(e.world, x + vx, y + vy, z + vz, vx, vy, vz);
+            SmallFireballEntityUtil.setItem(fireball, bulletStack);
+            WorldUtil.spawnEntity(e.world, fireball);
             return;
         }
-        if (bulletStack.getItem() instanceof ArrowItem) {
-            ArrowEntity arrow = new ArrowEntity(e.world, x + vx, y + vy, z + vz);
-            arrow.initFromStack(bulletStack);
-            arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
-            e.world.spawnEntity(arrow);
+        if (item instanceof ArrowItem) {
+            ArrowEntity arrow = ArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz, bulletStack);
+            ArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
+            WorldUtil.spawnEntity(e.world, arrow);
             return;
         }
-        if (bulletStack.getItem() instanceof SpectralArrowItem) {
-            SpectralArrowEntity arrow = new SpectralArrowEntity(e.world, x + vx, y + vy, z + vz);
-            arrow.setVelocity(vx, vy, vz, 1.0f, divergence);
-            e.world.spawnEntity(arrow);
+        if (item instanceof SpectralArrowItem) {
+            SpectralArrowEntity arrow = SpectralArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz);
+            SpectralArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
+            WorldUtil.spawnEntity(e.world, arrow);
             return;
         }
-        if (bulletStack.getItem() instanceof SnowballItem) {
-            SnowballEntity snowball = new SnowballEntity(e.world, x + vx, y + vy, z + vz);
-            snowball.setItem(bulletStack);
-            snowball.setVelocity(vx, vy, vz);
-            e.world.spawnEntity(snowball);
+        if (item instanceof SnowballItem) {
+            SnowballEntity snowball = SnowballEntityUtil.create(e.world, x + vx, y + vy, z + vz);
+            SnowballEntityUtil.setItem(snowball, bulletStack);
+            SnowballEntityUtil.setVelocity(snowball, vx, vy, vz, 1.0f, divergence);
+            WorldUtil.spawnEntity(e.world, snowball);
             return;
         }
         BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
-        bullet.setItem(bulletStack);
+        bullet.callSetItem(bulletStack);
         bullet.setVelocity(vx, vy, vz, getBulletSpeed(), divergence);
-        e.world.spawnEntity(bullet);
+        WorldUtil.spawnEntity(e.world, bullet);
     }
 
     // 周辺の敵を取得

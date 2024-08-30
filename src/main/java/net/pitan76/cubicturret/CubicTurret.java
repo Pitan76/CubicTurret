@@ -1,7 +1,6 @@
 package net.pitan76.cubicturret;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.util.Identifier;
 import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.cubicturret.entity.Entities;
 import net.pitan76.cubicturret.item.ItemGroups;
@@ -9,7 +8,8 @@ import net.pitan76.cubicturret.item.Items;
 import net.pitan76.cubicturret.screen.ScreenHandlers;
 import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
-import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
+import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,10 @@ public class CubicTurret implements ModInitializer {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final CompatRegistry registry = CompatRegistry.create(MOD_ID);
+    private static final CompatRegistry registry0 = CompatRegistry.create(MOD_ID);
+
+    // 試験的にCompatRegistryV2を利用
+    public static final CompatRegistryV2 registry = new CompatRegistryV2(registry0);
 
     @Override
     public void onInitialize() {
@@ -41,7 +44,7 @@ public class CubicTurret implements ModInitializer {
         LOGGER.log(level, "[" + MOD_NAME + "] " + message);
     }
 
-    public static Identifier id(String path) {
-        return IdentifierUtil.id(MOD_ID, path);
+    public static CompatIdentifier id(String path) {
+        return CompatIdentifier.of(MOD_ID, path);
     }
 }
