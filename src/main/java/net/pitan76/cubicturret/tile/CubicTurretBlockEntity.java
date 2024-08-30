@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, SidedInventory, IInventory {
 
@@ -264,7 +265,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     public boolean isBulletItem(Item item) {
-        return Arrays.stream(getBulletItems()).toList().contains(item);
+        return Arrays.stream(getBulletItems()).collect(Collectors.toList()).contains(item);
     }
 
     @Override
