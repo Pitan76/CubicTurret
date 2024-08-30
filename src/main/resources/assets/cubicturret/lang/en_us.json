@@ -14,6 +14,9 @@
   "block.cubicturret.double_cubic_turret_infinity": "Infinite Double Turret",
   "item.cubicturret.turret_bullet": "Turret Bullet",
 
+  "tooltip.cubicturret.cubic_turret.line1": "§bSwitch attack mode by R-click + sneak",
+  "tooltip.cubicturret.cubic_turret.line2": "§bOpen turret inventory by R-click",
+
   "container.cubicturret.cubic_turret": "Turret Inventory",
   "itemGroup.cubicturret.turrets": "Cubic Turret",
 

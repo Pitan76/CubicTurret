@@ -14,6 +14,9 @@
   "block.cubicturret.double_cubic_turret_infinity": "無限二連砲タレット",
   "item.cubicturret.turret_bullet": "タレット用銃弾",
 
+  "tooltip.cubicturret.cubic_turret.line1": "§bタレットをスニークしながら右クリックで攻撃モードを切り替えます",
+  "tooltip.cubicturret.cubic_turret.line2": "§bまた、右クリックしてタレットインベントリを開きます",
+
   "container.cubicturret.cubic_turret": "タレット インベントリ",
   "itemGroup.cubicturret.turrets": "Cubic Turret",
 
