@@ -188,11 +188,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         bullet.setVelocity(vx, vy, vz, getBulletSpeed() + 2.0f, divergence);
         WorldUtil.spawnEntity(e.world, bullet);
 
-        try {
-            WorldUtil.playSound(e.world, null, e.pos, SoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, SoundCategory.NEUTRAL, 0.5F, 0.3F / (WorldRandomUtil.nextFloat(e.world) * 0.4F + 0.8F));
-        } catch (Exception ignored) {
-            // ignored
-        }
+        WorldUtil.playSound(e.world, null, e.pos, SoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, SoundCategory.NEUTRAL, 0.5F, 0.3F / (WorldRandomUtil.nextFloat(e.world) * 0.4F + 0.8F));
     }
 
     // 周辺の敵を取得
