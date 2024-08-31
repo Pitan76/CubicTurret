@@ -7,11 +7,9 @@ import net.pitan76.cubicturret.item.ItemGroups;
 import net.pitan76.cubicturret.item.Items;
 import net.pitan76.cubicturret.screen.ScreenHandlers;
 import net.pitan76.cubicturret.tile.BlockEntities;
-import net.pitan76.mcpitanlib.api.registry.CompatRegistry;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
+import net.pitan76.mcpitanlib.api.util.LoggerUtil;
 import org.apache.logging.log4j.Logger;
 
 public class CubicTurret implements ModInitializer {
@@ -19,16 +17,13 @@ public class CubicTurret implements ModInitializer {
     public static final String MOD_NAME = "Cubic Turret";
     public static final String MOD_ID = "cubicturret";
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerUtil.getLogger(MOD_NAME);
 
-    private static final CompatRegistry registry0 = CompatRegistry.create(MOD_ID);
-
-    // 試験的にCompatRegistryV2を利用
-    public static final CompatRegistryV2 registry = new CompatRegistryV2(registry0);
+    public static final CompatRegistryV2 registry = CompatRegistryV2.create(MOD_ID);
 
     @Override
     public void onInitialize() {
-        log(Level.INFO, "Initializing");
+        log("Initializing");
 
         ItemGroups.init();
         Blocks.init();
@@ -40,8 +35,8 @@ public class CubicTurret implements ModInitializer {
         registry.allRegister();
     }
 
-    public static void log(Level level, String message){
-        LOGGER.log(level, "[" + MOD_NAME + "] " + message);
+    public static void log(String message){
+        LoggerUtil.info(LOGGER, message);
     }
 
     public static CompatIdentifier id(String path) {
