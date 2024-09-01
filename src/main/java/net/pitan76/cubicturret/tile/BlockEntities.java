@@ -7,7 +7,7 @@ import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
 import net.pitan76.mcpitanlib.api.tile.BlockEntityTypeBuilder;
 
-import static net.pitan76.cubicturret.CubicTurret.id;
+import static net.pitan76.cubicturret.CubicTurret._id;
 import static net.pitan76.cubicturret.CubicTurret.registry;
 
 public class BlockEntities {
@@ -15,7 +15,7 @@ public class BlockEntities {
     public static RegistryResult<BlockEntityType<?>> DOUBLE_CUBIC_TURRET;
 
     public static void init() {
-        CUBIC_TURRET = registry.registerBlockEntityType(id("cubic_turret"), () -> create(
+        CUBIC_TURRET = registry.registerBlockEntityType(_id("cubic_turret"), () -> create(
                 CubicTurretBlockEntity::new,
                 Blocks.CUBIC_TURRET_BLOCK.getOrNull(),
                 Blocks.CUBIC_TURRET_LV2_BLOCK.getOrNull(),
@@ -24,7 +24,7 @@ public class BlockEntities {
                 Blocks.CUBIC_TURRET_LV5_BLOCK.getOrNull(),
                 Blocks.CUBIC_TURRET_INF_BLOCK.getOrNull()
         ));
-        DOUBLE_CUBIC_TURRET = registry.registerBlockEntityType(id("double_cubic_turret"), () -> create(
+        DOUBLE_CUBIC_TURRET = registry.registerBlockEntityType(_id("double_cubic_turret"), () -> create(
                 DoubleCubicTurretBlockEntity::new,
                 Blocks.DOUBLE_CUBIC_TURRET_BLOCK.getOrNull(),
                 Blocks.DOUBLE_CUBIC_TURRET_LV2_BLOCK.getOrNull(),
