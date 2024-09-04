@@ -26,5 +26,7 @@
   "targetmode.cubicturret.non_player": "§6[§dCubic Turret§6] §bToggled to Non-Player attack mode",
   "targetmode.cubicturret.phantom_only": "§6[§dCubic Turret§6] §bToggled to Phantom attack mode",
   "targetmode.cubicturret.all": "§6[§dCubic Turret§6] §bToggled to All attack mode",
-  "targetmode.cubicturret.none": "§6[§dCubic Turret§6] §bDisabled attack mode"
+  "targetmode.cubicturret.none": "§6[§dCubic Turret§6] §bDisabled attack mode",
+
+  "entity.cubicturret.bullet": "Turret"
 }

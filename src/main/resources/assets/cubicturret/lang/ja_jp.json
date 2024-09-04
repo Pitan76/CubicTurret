@@ -26,5 +26,7 @@
   "targetmode.cubicturret.non_player": "§6[§dCubic Turret§6] §b非プレイヤー攻撃モードに切り替えました",
   "targetmode.cubicturret.phantom_only": "§6[§dCubic Turret§6] §bファントム攻撃モードに切り替えました",
   "targetmode.cubicturret.all": "§6[§dCubic Turret§6] §b全て攻撃モードに切り替えました",
-  "targetmode.cubicturret.none": "§6[§dCubic Turret§6] §b攻撃モードを無効にしました"
+  "targetmode.cubicturret.none": "§6[§dCubic Turret§6] §b攻撃モードを無効にしました",
+
+  "entity.cubicturret.bullet": "タレット"
 }
