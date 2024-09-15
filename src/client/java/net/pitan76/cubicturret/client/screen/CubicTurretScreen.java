@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import net.pitan76.mcpitanlib.api.client.SimpleInventoryScreen;
 import net.pitan76.mcpitanlib.api.client.render.handledscreen.DrawForegroundArgs;
 import net.pitan76.mcpitanlib.api.util.IdentifierUtil;
+import net.pitan76.mcpitanlib.api.util.client.ClientUtil;
 
 public class CubicTurretScreen extends SimpleInventoryScreen {
 
@@ -14,6 +15,10 @@ public class CubicTurretScreen extends SimpleInventoryScreen {
         super(handler, inventory, title);
         setBackgroundWidth(176);
         setBackgroundHeight(166);
+
+        if (this.textRenderer == null)
+            this.textRenderer = ClientUtil.getTextRenderer();
+
         setTitleXCenter();
     }
 
