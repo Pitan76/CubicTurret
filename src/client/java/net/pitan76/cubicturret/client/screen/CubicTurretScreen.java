@@ -16,10 +16,14 @@ public class CubicTurretScreen extends SimpleInventoryScreen {
         setBackgroundWidth(176);
         setBackgroundHeight(166);
 
+    }
+
+    @Override
+    public void initOverride() {
         if (this.textRenderer == null)
             this.textRenderer = ClientUtil.getTextRenderer();
 
-        setTitleXCenter();
+        setTitleX(backgroundWidth / 2 - textRenderer.getWidth(title) / 2);
     }
 
     @Override
