@@ -1,6 +1,5 @@
 package net.pitan76.cubicturret.entity;
 
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
 import net.pitan76.mcpitanlib.api.entity.CompatThrownItemEntity;

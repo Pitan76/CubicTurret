@@ -1,6 +1,7 @@
 package net.pitan76.cubicturret.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.pitan76.cubicturret.CubicTurret;
 import net.pitan76.cubicturret.client.screen.CubicTurretScreen;
 import net.pitan76.cubicturret.entity.Entities;
 import net.pitan76.cubicturret.screen.ScreenHandlers;
@@ -13,6 +14,6 @@ public class CubicTurretClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityRendererRegistry.registerEntityRendererAsFlyingItem(() -> Entities.BULLET_ENTITY.get());
 
-        CompatRegistryClient.registerScreen(ScreenHandlers.CUBIC_TURRET.getOrNull(), CubicTurretScreen::new);
+        CompatRegistryClient.registerScreen(CubicTurret.MOD_ID, ScreenHandlers.CUBIC_TURRET.getOrNull(), CubicTurretScreen::new);
     }
 }

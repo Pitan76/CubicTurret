@@ -1,6 +1,8 @@
 plugins {
     id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 version = project.mod_version
@@ -35,6 +37,82 @@ dependencies {
 
     modApi "net.pitan76:mcpitanlib-fabric${rootProject.mcpitanlib_version}"
     include "net.pitan76:mcpitanlib_checker-fabric:${rootProject.mcpitanlib_checker_version}"
+}
+
+if (name in "fabric".split(",")) {
+    var modLoader = name
+
+    if (System.getenv("CURSEFORGE_TOKEN") != null) {
+        curseforge {
+            apiKey = System.getenv("CURSEFORGE_TOKEN")
+            project {
+                id = '1093081'
+                changelog = rootProject.changelog + "\nMCPitanLib: " + rootProject.mcpitanlib_version.split(":")[1]
+                releaseType = 'release'
+
+                if (modLoader == "fabric")
+                    addGameVersion "Fabric"
+
+                if (modLoader == "forge")
+                    addGameVersion "Forge"
+
+                addGameVersion '1.18'
+                addGameVersion '1.18.1'
+                addGameVersion '1.18.2'
+                addGameVersion '1.19'
+                addGameVersion '1.19.1'
+                addGameVersion '1.19.2'
+                addGameVersion '1.20'
+                addGameVersion '1.20.1'
+                addGameVersion '1.20.3'
+                addGameVersion '1.20.4'
+
+                if (modLoader == "fabric") {
+                    addGameVersion '1.21'
+                    addGameVersion '1.21.1'
+                    addGameVersion '1.21.2'
+                    addGameVersion '1.21.3'
+                }
+
+                relations {
+                    if (modLoader == "fabric") {
+                        requiredDependency "fabric-api"
+                    }
+                    requiredDependency 'mcpitanlibarch'
+                }
+
+                mainArtifact(tasks.remapJar)
+            }
+            options {
+                forgeGradleIntegration = false
+            }
+        }
+
+    }
+
+    if (System.getenv("MODRINTH_TOKEN") != null) {
+        modrinth {
+            token = System.getenv("MODRINTH_TOKEN")
+            projectId = 'cubicturret'
+            versionNumber = project.mod_version + "-" + modLoader
+            gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
+
+            if (modLoader == "fabric") {
+                gameVersions.addAll(['1.21', '1.21.1', '1.21.2', '1.21.3'])
+            }
+
+            versionType = 'release'
+            uploadFile = tasks.remapJar
+            changelog = rootProject.changelog
+            loaders = [modLoader]
+            dependencies {
+                if (modLoader == "fabric") {
+                    required.project "P7dR8mSH" // Fabric API
+                }
+                required.project "uNRoUnGT" // MCPitanLib
+            }
+        }
+    }
 }
 
 processResources {

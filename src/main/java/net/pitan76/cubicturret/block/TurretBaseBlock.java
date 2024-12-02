@@ -2,12 +2,12 @@ package net.pitan76.cubicturret.block;
 
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.event.block.CollisionShapeEvent;
 import net.pitan76.mcpitanlib.api.event.block.OutlineShapeEvent;
 
-public class TurretBaseBlock extends ExtendBlock {
+public class TurretBaseBlock extends CompatBlock  {
 
     public TurretBaseBlock(CompatibleBlockSettings settings) {
         super(settings);

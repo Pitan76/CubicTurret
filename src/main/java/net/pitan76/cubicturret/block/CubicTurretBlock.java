@@ -1,6 +1,6 @@
 package net.pitan76.cubicturret.block;
 
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 
 public class CubicTurretBlock extends AbstractCubicTurretBlock {
 

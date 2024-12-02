@@ -1,32 +1,36 @@
 package net.pitan76.cubicturret.block;
 
-import net.minecraft.block.BlockState;
+import net.pitan76.mcpitanlib.api.block.args.v2.CollisionShapeEvent;
+import net.pitan76.mcpitanlib.api.block.args.v2.OutlineShapeEvent;
+import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;
+import net.pitan76.mcpitanlib.api.event.block.AppendPropertiesArgs;
+import net.pitan76.mcpitanlib.api.event.block.BlockUseEvent;
+import net.pitan76.mcpitanlib.api.event.block.StateReplacedEvent;
+import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
+import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
+import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
-import net.pitan76.mcpitanlib.api.block.CompatibleBlockSettings;
-import net.pitan76.mcpitanlib.api.block.ExtendBlock;
+import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
+import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
-import net.pitan76.mcpitanlib.api.event.block.*;
 import net.pitan76.mcpitanlib.api.event.item.ItemAppendTooltipEvent;
-import net.pitan76.mcpitanlib.api.util.BlockStateUtil;
 import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.VoxelShapeUtil;
+import net.pitan76.mcpitanlib.midohra.block.BlockState;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractCubicTurretBlock extends ExtendBlock implements ExtendBlockEntityProvider {
+public abstract class AbstractCubicTurretBlock extends CompatBlock implements ExtendBlockEntityProvider {
 
-    public static DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static DirectionProperty FACING = CompatProperties.HORIZONTAL_FACING;
 
     public AbstractCubicTurretBlock(CompatibleBlockSettings settings) {
         super(settings);
-        setDefaultState(BlockStateUtil.getDefaultState(this).with(FACING, Direction.NORTH));
+        setDefaultState(getDefaultMidohraState().with(FACING, Direction.NORTH));
     }
 
     @Override
@@ -54,7 +58,7 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
 
     @Override
     public BlockState getPlacementState(PlacementStateArgs args) {
-        return args.withBlockState(FACING, args.getHorizontalPlayerFacing().getOpposite());
+        return args.with(FACING, args.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
@@ -64,9 +68,9 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
     }
 
     @Override
-    public ActionResult onRightClick(BlockUseEvent e) {
-        if (e.isClient()) return ActionResult.SUCCESS;
-        if (!e.hasBlockEntity()) return ActionResult.PASS;
+    public CompatActionResult onRightClick(BlockUseEvent e) {
+        if (e.isClient()) return e.success();
+        if (!e.hasBlockEntity()) return e.pass();
 
         BlockEntity blockEntity = e.getBlockEntity();
         if (!(blockEntity instanceof CubicTurretBlockEntity)) return super.onRightClick(e);
@@ -75,22 +79,22 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
 
         if (e.isSneaking()) {
             tile.toggle(e.player);
-            return ActionResult.CONSUME;
+            return e.consume();
         }
 
         e.player.openMenu(tile);
 
-        return ActionResult.CONSUME;
+        return e.consume();
     }
 
     @Override
     public VoxelShape getOutlineShape(OutlineShapeEvent e) {
-        return getShape(e.getProperty(FACING));
+        return getShape(e.get(FACING));
     }
 
     @Override
     public VoxelShape getCollisionShape(CollisionShapeEvent e) {
-        return getShape(e.getProperty(FACING));
+        return getShape(e.get(FACING));
     }
 
     public VoxelShape getShape(Direction direction) {
@@ -98,22 +102,18 @@ public abstract class AbstractCubicTurretBlock extends ExtendBlock implements Ex
                 VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5, 0.5625, 1, 0.5625),
                 VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5625, 0.9375, 0.5));
 
-        switch (direction) {
-            case SOUTH:
-                cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.4375, 0.875, 0.25, 0.5625, 0.9375, 0.4375),
-                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5625, 1, 0.5),
-                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5, 0.5625, 0.9375, 0.5625));
-                break;
-            case EAST:
-                cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.25, 0.875, 0.4375, 0.4375, 0.9375, 0.5625),
-                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5, 1, 0.5625),
-                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.4375, 0.5625, 0.9375, 0.5625));
-                break;
-            case WEST:
-                cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.5625, 0.875, 0.4375, 0.75, 0.9375, 0.5625),
-                        VoxelShapeUtil.cuboid(0.5, 0.8125, 0.4375, 0.5625, 1, 0.5625),
-                        VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5, 0.9375, 0.5625));
-                break;
+        if (direction.equals(Direction.SOUTH)) {
+            cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.4375, 0.875, 0.25, 0.5625, 0.9375, 0.4375),
+                    VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5625, 1, 0.5),
+                    VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5, 0.5625, 0.9375, 0.5625));
+        } else if (direction.equals(Direction.EAST)) {
+            cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.25, 0.875, 0.4375, 0.4375, 0.9375, 0.5625),
+                    VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5, 1, 0.5625),
+                    VoxelShapeUtil.cuboid(0.5, 0.8125, 0.4375, 0.5625, 0.9375, 0.5625));
+        } else if (direction.equals(Direction.WEST)) {
+            cannon = VoxelShapeUtil.union(VoxelShapeUtil.cuboid(0.5625, 0.875, 0.4375, 0.75, 0.9375, 0.5625),
+                    VoxelShapeUtil.cuboid(0.5, 0.8125, 0.4375, 0.5625, 1, 0.5625),
+                    VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.4375, 0.5, 0.9375, 0.5625));
         }
 
         return VoxelShapeUtil.union(

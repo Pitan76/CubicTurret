@@ -10,16 +10,12 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
 import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
@@ -30,9 +26,14 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.ChestStyleSidedInventory;
+import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
+import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
+import net.pitan76.mcpitanlib.api.sound.CompatSoundEvents;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
 import net.pitan76.mcpitanlib.api.util.*;
+import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
 import net.pitan76.mcpitanlib.api.util.entity.ArrowEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SmallFireballEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SnowballEntityUtil;
@@ -45,11 +46,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, SidedInventory, IInventory {
+public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, ChestStyleSidedInventory, IInventory {
 
     public int level = 0;
 
-    public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    public ItemStackList inventory = ItemStackList.ofSize(9);
 
     public CubicTurretBlockEntity(TileCreateEvent e) {
         this(BlockEntities.CUBIC_TURRET.getOrNull(), e);
@@ -64,7 +65,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         super.writeNbt(args);
         InventoryUtil.writeNbt(args, inventory);
         if (level != 0)
-            NbtUtil.set(args.nbt, "level", level);
+            NbtUtil.putInt(args.nbt, "level", level);
     }
 
     @Override
@@ -72,17 +73,17 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         super.readNbt(args);
         InventoryUtil.readNbt(args, inventory);
         if (NbtUtil.has(args.nbt, "level"))
-            level = NbtUtil.get(args.nbt, "level", Integer.class);
+            level = NbtUtil.getInt(args.nbt, "level");
     }
 
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
-        if (e.world.isClient) return;
+        if (e.isClient()) return;
         if (e.world.getTime() % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
-            Block block = e.world.getBlockState(e.pos).getBlock();
+            Block block = e.getBlockState().getBlock().get();
             if (block instanceof CubicTurretBlock) {
                 level = ((CubicTurretBlock) block).getLevel();
                 if (level == 0) level = 1;
@@ -125,7 +126,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
             return stack;
         }
-        return ItemStack.EMPTY;
+        return ItemStackUtil.empty();
     }
 
     public float getDivergence() {
@@ -188,19 +189,18 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         bullet.setVelocity(vx, vy, vz, getBulletSpeed() + 2.0f, divergence);
         WorldUtil.spawnEntity(e.world, bullet);
 
-        WorldUtil.playSound(e.world, null, e.pos, SoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, SoundCategory.NEUTRAL, 0.5F, 0.3F / (WorldRandomUtil.nextFloat(e.world) * 0.4F + 0.8F));
+        WorldUtil.playSound(e.world, null, e.pos, CompatSoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, CompatSoundCategory.NEUTRAL, 0.5F, 0.3F / (WorldRandomUtil.nextFloat(e.world) * 0.4F + 0.8F));
     }
 
     // 周辺の敵を取得
     public List<Entity> getTargetEntities(TileTickEvent<CubicTurretBlockEntity> e) {
-        List<Entity> list = new ArrayList<>();
         if (targetMode == TargetMode.NONE) return new ArrayList<>();
 
         // MobEntity
         Box box = BoxUtil.createBox(e.pos.getX() - getShootRange(), e.pos.getY() - getShootBottom(), e.pos.getZ() - getShootRange(),
                 e.pos.getX() + getShootRange(), e.pos.getY() + getShootTop(), e.pos.getZ() + getShootRange());
 
-        list.addAll(e.world.getEntitiesByClass(LivingEntity.class, box, Entity::isAlive));
+        List<Entity> list = new ArrayList<>(WorldUtil.getEntitiesByClass(e.world, LivingEntity.class, box, Entity::isAlive));
 
         if (targetMode == TargetMode.ALL) return list;
 
@@ -285,22 +285,12 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getAvailableSlots(AvailableSlotsArgs args) {
         int[] result = new int[getItems().size() - 1];
         for (int i = 0; i < result.length; i++) {
             result[i] = i + 1;
         }
         return result;
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return dir != Direction.DOWN;
-    }
-
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return dir == Direction.DOWN;
     }
 
     @Override
