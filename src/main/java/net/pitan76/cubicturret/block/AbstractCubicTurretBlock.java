@@ -1,5 +1,6 @@
 package net.pitan76.cubicturret.block;
 
+import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.block.args.v2.CollisionShapeEvent;
 import net.pitan76.mcpitanlib.api.block.args.v2.OutlineShapeEvent;
 import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;
@@ -23,6 +24,8 @@ import net.pitan76.mcpitanlib.api.util.VoxelShapeUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public abstract class AbstractCubicTurretBlock extends CompatBlock implements ExtendBlockEntityProvider {
 
@@ -58,7 +61,14 @@ public abstract class AbstractCubicTurretBlock extends CompatBlock implements Ex
 
     @Override
     public BlockState getPlacementState(PlacementStateArgs args) {
-        return args.with(FACING, args.getHorizontalPlayerFacing().getOpposite());
+        if (args.isBlockExist())
+            return args.with(FACING, args.getHorizontalPlayerFacing().getOpposite());
+
+        BlockState state = super.getPlacementState(args);
+        if (state != null)
+            return Objects.requireNonNull(state).with(FACING, args.getHorizontalPlayerFacing().getOpposite());
+
+        return state;
     }
 
     @Override
