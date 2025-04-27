@@ -9,6 +9,8 @@ import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
+import net.pitan76.mcpitanlib.api.util.WorldUtil;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 
 public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
@@ -23,7 +25,7 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         if (e.isClient()) return;
-        if (e.world.getTime() % getFireSpeed() != 0) return;
+        if (WorldUtil.getTime(e.world) % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
@@ -55,9 +57,10 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
         Entity target = getTargetEntity(e);
         if (target == null) return false;
 
-        double dx = target.getX() - e.pos.getX();
-        double dy = target.getY() - e.pos.getY();
-        double dz = target.getZ() - e.pos.getZ();
+        BlockPos pos = BlockPos.of(e.pos);
+        double dx = target.getX() - pos.getX();
+        double dy = target.getY() - pos.getY();
+        double dz = target.getZ() - pos.getZ();
 
         double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
@@ -86,6 +89,7 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
             shiftZ += shift;
         }
 
-        shoot(e, e.pos.getX() + 0.5 + shiftX, e.pos.getY() + 0.8, e.pos.getZ() + 0.5 + shiftZ, vx, vy, vz, divergence, bulletStack);
+        BlockPos pos = BlockPos.of(e.pos);
+        shoot(e, pos.getX() + 0.5 + shiftX, pos.getY() + 0.8, pos.getZ() + 0.5 + shiftZ, vx, vy, vz, divergence, bulletStack);
     }
 }

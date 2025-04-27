@@ -2,7 +2,6 @@ package net.pitan76.cubicturret.screen;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.pitan76.mcpitanlib.api.entity.Player;
@@ -10,6 +9,7 @@ import net.pitan76.mcpitanlib.api.gui.SimpleScreenHandler;
 import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
 
 public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
@@ -17,7 +17,7 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
     public Inventory inventory;
 
     public CubicTurretScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(9));
+        this(syncId, playerInventory, new CompatInventory(9));
     }
 
     public CubicTurretScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -33,34 +33,34 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
     @Override
     public ItemStack quickMoveOverride(Player player, int index) {
-        ItemStack itemStack = ItemStackUtil.empty();
+        ItemStack originStack = ItemStackUtil.empty();
         Slot slot = ScreenHandlerUtil.getSlot(this, index);
-        if (slot.hasStack()) {
-            ItemStack itemStack2 = SlotUtil.getStack(slot);
-            itemStack = itemStack2.copy();
+        if (SlotUtil.hasStack(slot)) {
+            ItemStack stack = SlotUtil.getStack(slot);
+            originStack = ItemStackUtil.copy(stack);
             if (index < 9) {
-                if (!this.callInsertItem(itemStack2, 9, 18, true)) {
-                    if (!this.callInsertItem(itemStack2, 18, 45, true)) {
+                if (!this.callInsertItem(stack, 9, 18, true)) {
+                    if (!this.callInsertItem(stack, 18, 45, true)) {
                         return ItemStackUtil.empty();
                     }
                 }
-            } else if (!this.callInsertItem(itemStack2, 0, 9, false)) {
+            } else if (!this.callInsertItem(stack, 0, 9, false)) {
                 return ItemStackUtil.empty();
             }
 
-            if (itemStack2.isEmpty()) {
+            if (ItemStackUtil.isEmpty(stack)) {
                 SlotUtil.setStack(slot, ItemStackUtil.empty());
             } else {
                 SlotUtil.markDirty(slot);
             }
 
-            if (itemStack2.getCount() == itemStack.getCount()) {
+            if (ItemStackUtil.getCount(stack) == ItemStackUtil.getCount(originStack)) {
                 return ItemStackUtil.empty();
             }
 
-            SlotUtil.onTakeItem(slot, player, itemStack2);
+            SlotUtil.onTakeItem(slot, player, stack);
         }
 
-        return itemStack;
+        return originStack;
     }
 }

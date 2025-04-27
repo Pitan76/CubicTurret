@@ -1,6 +1,5 @@
 package net.pitan76.cubicturret.block;
 
-import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.block.args.v2.CollisionShapeEvent;
 import net.pitan76.mcpitanlib.api.block.args.v2.OutlineShapeEvent;
 import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;

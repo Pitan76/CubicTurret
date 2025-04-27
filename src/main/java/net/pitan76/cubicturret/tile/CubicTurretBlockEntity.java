@@ -4,14 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.*;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -22,12 +19,15 @@ import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
 import net.pitan76.cubicturret.turret.TargetMode;
 import net.pitan76.mcpitanlib.api.entity.Player;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
+import net.pitan76.mcpitanlib.api.event.container.factory.DisplayNameArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
+import net.pitan76.mcpitanlib.api.gui.args.CreateMenuEvent;
 import net.pitan76.mcpitanlib.api.gui.inventory.IInventory;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.ChestStyleSidedInventory;
 import net.pitan76.mcpitanlib.api.gui.inventory.sided.args.AvailableSlotsArgs;
+import net.pitan76.mcpitanlib.api.gui.v2.SimpleScreenHandlerFactory;
 import net.pitan76.mcpitanlib.api.sound.CompatSoundCategory;
 import net.pitan76.mcpitanlib.api.sound.CompatSoundEvents;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
@@ -46,7 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, NamedScreenHandlerFactory, ChestStyleSidedInventory, IInventory {
+public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendBlockEntityTicker<CubicTurretBlockEntity>, SimpleScreenHandlerFactory, ChestStyleSidedInventory, IInventory {
 
     public int level = 0;
 
@@ -79,7 +79,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         if (e.isClient()) return;
-        if (e.world.getTime() % getFireSpeed() != 0) return;
+        if (WorldUtil.getTime(e.world) % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
@@ -275,13 +275,13 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     @Override
-    public Text getDisplayName() {
+    public Text getDisplayName(DisplayNameArgs args) {
         return TextUtil.translatable("container.cubicturret.cubic_turret");
     }
 
     @Override
-    public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return new CubicTurretScreenHandler(syncId, inv, this);
+    public ScreenHandler createMenu(CreateMenuEvent e) {
+        return new CubicTurretScreenHandler(e.getSyncId(), e.getPlayerInventory(), this);
     }
 
     @Override
