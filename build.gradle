@@ -120,6 +120,10 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
                 addGameVersion '1.21.1'
                 addGameVersion '1.21.2'
                 addGameVersion '1.21.3'
+                addGameVersion '1.21.4'
+                addGameVersion '1.21.5'
+                addGameVersion '1.21.6'
+                addGameVersion '1.21.7'
             }
 
             relations {
@@ -143,7 +147,7 @@ if (System.getenv("MODRINTH_TOKEN") != null) {
         gameVersions = ['1.18', '1.18.1', '1.18.2', '1.19', '1.19.1', '1.19.2', '1.20', '1.20.1', '1.20.3', '1.20.4']
 
         if (modLoader != "forge") {
-            gameVersions.addAll(['1.21', '1.21.1', '1.21.2', '1.21.3'])
+            gameVersions.addAll(['1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4', '1.21.5', '1.21.6', '1.21.7'])
         }
 
         versionType = 'release'
