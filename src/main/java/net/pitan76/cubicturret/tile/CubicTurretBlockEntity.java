@@ -9,10 +9,9 @@ import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.projectile.SpectralArrowEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.*;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Box;
 import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.cubicturret.screen.CubicTurretScreenHandler;
@@ -38,7 +37,11 @@ import net.pitan76.mcpitanlib.api.util.entity.ArrowEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SmallFireballEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SnowballEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SpectralArrowEntityUtil;
-import net.pitan76.mcpitanlib.api.util.math.BoxUtil;
+import net.pitan76.mcpitanlib.api.util.math.random.CompatRandom;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
+import net.pitan76.mcpitanlib.midohra.util.math.Box;
+import net.pitan76.mcpitanlib.midohra.util.math.Vector3d;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -79,11 +82,13 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         if (e.isClient()) return;
-        if (WorldUtil.getTime(e.world) % getFireSpeed() != 0) return;
+        World world = e.getMidohraWorld();
+
+        if (world.getTime() % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
-            Block block = e.getBlockState().getBlock().get();
+            Block block = e.getBlock();
             if (block instanceof CubicTurretBlock) {
                 level = ((CubicTurretBlock) block).getLevel();
                 if (level == 0) level = 1;
@@ -159,48 +164,57 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
         Item item = bulletStack.getItem();
+        World world = e.getMidohraWorld();
+
         if (item instanceof FireChargeItem) {
             SmallFireballEntity fireball = SmallFireballEntityUtil.create(e.world, x + vx, y + vy, z + vz, vx, vy, vz);
             SmallFireballEntityUtil.setItem(fireball, bulletStack);
-            WorldUtil.spawnEntity(e.world, fireball);
+            world.spawnEntity(fireball);
             return;
         }
         if (item instanceof ArrowItem) {
             ArrowEntity arrow = ArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz, bulletStack);
             ArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
-            WorldUtil.spawnEntity(e.world, arrow);
+            world.spawnEntity(arrow);
             return;
         }
         if (item instanceof SpectralArrowItem) {
             SpectralArrowEntity arrow = SpectralArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz);
             SpectralArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
-            WorldUtil.spawnEntity(e.world, arrow);
+            world.spawnEntity(arrow);
             return;
         }
         if (item instanceof SnowballItem) {
             SnowballEntity snowball = SnowballEntityUtil.create(e.world, x + vx, y + vy, z + vz);
             SnowballEntityUtil.setItem(snowball, bulletStack);
             SnowballEntityUtil.setVelocity(snowball, vx, vy, vz, 1.0f, divergence);
-            WorldUtil.spawnEntity(e.world, snowball);
+            world.spawnEntity(snowball);
             return;
         }
+
         BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
         bullet.callSetItem(bulletStack);
         bullet.setVelocity(vx, vy, vz, getBulletSpeed() + 2.0f, divergence);
-        WorldUtil.spawnEntity(e.world, bullet);
+        world.spawnEntity(bullet);
 
-        WorldUtil.playSound(e.world, null, e.pos, CompatSoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, CompatSoundCategory.NEUTRAL, 0.5F, 0.3F / (WorldRandomUtil.nextFloat(e.world) * 0.4F + 0.8F));
+        CompatRandom random = world.getRandom();
+
+        world.playSound(null, e.getMidohraPos(), CompatSoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, CompatSoundCategory.NEUTRAL, 0.5F, 0.3F / (random.nextFloat() * 0.4F + 0.8F));
     }
 
     // 周辺の敵を取得
     public List<Entity> getTargetEntities(TileTickEvent<CubicTurretBlockEntity> e) {
         if (targetMode == TargetMode.NONE) return new ArrayList<>();
 
-        // MobEntity
-        Box box = BoxUtil.createBox(e.pos.getX() - getShootRange(), e.pos.getY() - getShootBottom(), e.pos.getZ() - getShootRange(),
-                e.pos.getX() + getShootRange(), e.pos.getY() + getShootTop(), e.pos.getZ() + getShootRange());
+        World world = e.getMidohraWorld();
 
-        List<Entity> list = new ArrayList<>(WorldUtil.getEntitiesByClass(e.world, LivingEntity.class, box, Entity::isAlive));
+        // MobEntity
+        Vector3d pos1 = e.getMidohraPos().toVector3d().sub(getShootRange(), getShootBottom(), getShootRange());
+        Vector3d pos2 = e.getMidohraPos().toVector3d().add(getShootRange(), getShootTop(), getShootRange());
+
+        Box box = new Box(pos1, pos2);
+
+        List<Entity> list = new ArrayList<>(world.getEntitiesByClass(LivingEntity.class, box));
 
         if (targetMode == TargetMode.ALL) return list;
 
@@ -294,7 +308,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public ItemStackList getItems() {
         return inventory;
     }
 

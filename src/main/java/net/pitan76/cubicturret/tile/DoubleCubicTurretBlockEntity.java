@@ -12,6 +12,7 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
     public DoubleCubicTurretBlockEntity(TileCreateEvent e) {
@@ -25,7 +26,9 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
     @Override
     public void tick(TileTickEvent<CubicTurretBlockEntity> e) {
         if (e.isClient()) return;
-        if (WorldUtil.getTime(e.world) % getFireSpeed() != 0) return;
+
+        World world = e.getMidohraWorld();
+        if (world.getTime() % getFireSpeed() != 0) return;
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
