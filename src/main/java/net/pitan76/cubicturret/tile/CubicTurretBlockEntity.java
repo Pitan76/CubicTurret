@@ -44,6 +44,8 @@ import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
+import net.pitan76.mcpitanlib.midohra.nbt.NbtCompound;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Box;
 import net.pitan76.mcpitanlib.midohra.util.math.Vector3d;
 import net.pitan76.mcpitanlib.midohra.world.World;
@@ -71,17 +73,21 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     @Override
     public void writeNbt(WriteNbtArgs args) {
         super.writeNbt(args);
+        NbtCompound nbt = args.getNbtM();
+
         InventoryUtil.writeNbt(args, inventory);
         if (level != 0)
-            NbtUtil.putInt(args.nbt, "level", level);
+            nbt.putInt("level", level);
     }
 
     @Override
     public void readNbt(ReadNbtArgs args) {
         super.readNbt(args);
+        NbtCompound nbt = args.getNbtM();
+
         InventoryUtil.readNbt(args, inventory);
-        if (NbtUtil.has(args.nbt, "level"))
-            level = NbtUtil.getInt(args.nbt, "level");
+        if (nbt.has("level"))
+            level = nbt.getInt("level");
     }
 
     @Override
@@ -148,10 +154,11 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (target == null) return false;
 
         Vector3d targetPos = target.getPos();
+        BlockPos pos = e.getMidohraPos();
 
-        double dx = targetPos.getX() - e.pos.getX();
-        double dy = targetPos.getY() - e.pos.getY();
-        double dz = targetPos.getZ() - e.pos.getZ();
+        double dx = targetPos.getX() - pos.getX();
+        double dy = targetPos.getY() - pos.getY();
+        double dz = targetPos.getZ() - pos.getZ();
 
         double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
@@ -166,7 +173,8 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
-        shoot(e, e.pos.getX() + 0.5, e.pos.getY() + 0.8, e.pos.getZ() + 0.5, vx, vy, vz, divergence, bulletStack);
+        BlockPos pos = e.getMidohraPos();
+        shoot(e, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, vx, vy, vz, divergence, bulletStack);
     }
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {

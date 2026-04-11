@@ -11,6 +11,7 @@ import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.util.math.Vector3d;
+import net.pitan76.mcpitanlib.midohra.util.math.Vector3i;
 import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
@@ -60,10 +61,11 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
         if (target == null) return false;
 
         Vector3d targetPos = target.getPos();
+        BlockPos pos = e.getMidohraPos();
 
-        double dx = targetPos.getX() - e.pos.getX();
-        double dy = targetPos.getY() - e.pos.getY();
-        double dz = targetPos.getZ() - e.pos.getZ();
+        double dx = targetPos.getX() - pos.getX();
+        double dy = targetPos.getY() - pos.getY();
+        double dz = targetPos.getZ() - pos.getZ();
 
         double distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
