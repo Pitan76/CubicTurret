@@ -1,6 +1,5 @@
 package net.pitan76.cubicturret.tile;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -40,6 +39,7 @@ import net.pitan76.mcpitanlib.api.util.entity.SmallFireballEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SnowballEntityUtil;
 import net.pitan76.mcpitanlib.api.util.entity.SpectralArrowEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.random.CompatRandom;
+import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
@@ -99,9 +99,9 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (inventory.isEmpty()) return;
 
         if (level == 0) {
-            Block block = e.getBlock();
-            if (block instanceof CubicTurretBlock) {
-                level = ((CubicTurretBlock) block).getLevel();
+            BlockWrapper block = e.getBlockWrapper();
+            if (block.instanceOf(CubicTurretBlock.class)) {
+                level = ((CubicTurretBlock) block.get()).getLevel();
                 if (level == 0) level = 1;
             }
         }
@@ -223,9 +223,11 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
 
         World world = e.getMidohraWorld();
 
+        Vector3d pos = e.getMidohraPos().toVector3d();
+
         // MobEntity
-        Vector3d pos1 = e.getMidohraPos().toVector3d().sub(getShootRange(), getShootBottom(), getShootRange());
-        Vector3d pos2 = e.getMidohraPos().toVector3d().add(getShootRange(), getShootTop(), getShootRange());
+        Vector3d pos1 = pos.sub(getShootRange(), getShootBottom(), getShootRange());
+        Vector3d pos2 = pos.add(getShootRange(), getShootTop(), getShootRange());
 
         Box box = new Box(pos1, pos2);
 
