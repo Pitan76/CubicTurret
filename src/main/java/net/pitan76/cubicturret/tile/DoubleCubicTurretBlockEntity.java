@@ -16,7 +16,7 @@ import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
     public DoubleCubicTurretBlockEntity(TileCreateEvent e) {
-        this(BlockEntities.DOUBLE_CUBIC_TURRET.getOrNull(), e);
+        this(BlockEntities.DOUBLE_CUBIC_TURRET.get(), e);
     }
 
     public DoubleCubicTurretBlockEntity(BlockEntityType<?> blockEntityType, TileCreateEvent e) {

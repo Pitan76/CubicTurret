@@ -133,6 +133,7 @@ if (System.getenv("CURSEFORGE_TOKEN") != null) {
             if (modLoader == "fabric") {
                 addGameVersion '26.1'
                 addGameVersion '26.1.1'
+                addGameVersion '26.1.2'
             }
 
             relations {
@@ -160,7 +161,7 @@ if (System.getenv("MODRINTH_TOKEN") != null) {
         }
 
         if (modLoader == "fabric") {
-            gameVersions.addAll(['26.1', '26.1.1'])
+            gameVersions.addAll(['26.1', '26.1.1', '26.1.2'])
         }
 
         versionType = 'release'

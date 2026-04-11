@@ -6,9 +6,9 @@ import net.pitan76.cubicturret.item.ItemGroups;
 import net.pitan76.cubicturret.item.Items;
 import net.pitan76.cubicturret.screen.ScreenHandlers;
 import net.pitan76.cubicturret.tile.BlockEntities;
-import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
 import net.pitan76.mcpitanlib.api.util.CompatIdentifier;
 import net.pitan76.mcpitanlib.fabric.ExtendModInitializer;
+import net.pitan76.mcpitanlib.midohra.registry.MidohraRegistry;
 
 public class CubicTurret extends ExtendModInitializer {
 
@@ -17,12 +17,12 @@ public class CubicTurret extends ExtendModInitializer {
 
     public static CubicTurret INSTANCE;
 
-    public static CompatRegistryV2 registry;
+    public static MidohraRegistry registry;
 
     @Override
     public void init() {
         INSTANCE = this;
-        registry = super.registry;
+        registry = MidohraRegistry.of(super.registry);
 
         ItemGroups.init();
         Blocks.init();

@@ -12,6 +12,6 @@ public class ScreenHandlers {
     public static SupplierResult<ScreenHandlerType<CubicTurretScreenHandler>> CUBIC_TURRET;
 
     public static void init() {
-        CUBIC_TURRET = registry.registerScreenHandlerType(_id("cubic_turret"), new SimpleScreenHandlerTypeBuilder<>(CubicTurretScreenHandler::new));
+        CUBIC_TURRET = registry.getCompatRegistry().registerScreenHandlerType(_id("cubic_turret"), new SimpleScreenHandlerTypeBuilder<>(CubicTurretScreenHandler::new));
     }
 }

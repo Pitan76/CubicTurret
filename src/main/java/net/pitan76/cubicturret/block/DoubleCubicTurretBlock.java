@@ -65,6 +65,6 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityType<T> getBlockEntityType() {
-        return (BlockEntityType<T>) BlockEntities.DOUBLE_CUBIC_TURRET.getOrNull();
+        return (BlockEntityType<T>) BlockEntities.DOUBLE_CUBIC_TURRET.get();
     }
 }

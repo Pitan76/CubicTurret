@@ -57,7 +57,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public ItemStackList inventory = ItemStackList.ofSize(9);
 
     public CubicTurretBlockEntity(TileCreateEvent e) {
-        this(BlockEntities.CUBIC_TURRET.getOrNull(), e);
+        this(BlockEntities.CUBIC_TURRET.get(), e);
     }
 
     public CubicTurretBlockEntity(BlockEntityType<?> blockEntityType, TileCreateEvent e) {
@@ -296,7 +296,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     public ItemWrapper[] getBulletItems() {
         return new ItemWrapper[]{
                 MCItems.FIRE_CHARGE, MCItems.ARROW, MCItems.TIPPED_ARROW, MCItems.SPECTRAL_ARROW, MCItems.SNOWBALL,
-                ItemWrapper.of(Items.TURRET_BULLET_ITEM.getOrNull())
+                ItemWrapper.of(Items.TURRET_BULLET_ITEM.get())
         };
     }
 

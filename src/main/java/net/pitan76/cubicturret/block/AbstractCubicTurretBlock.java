@@ -37,7 +37,7 @@ public abstract class AbstractCubicTurretBlock extends CompatBlock implements Ex
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityType<T> getBlockEntityType() {
-        return (BlockEntityType<T>) BlockEntities.CUBIC_TURRET.getOrNull();
+        return (BlockEntityType<T>) BlockEntities.CUBIC_TURRET.get();
     }
 
     @Override

@@ -1,10 +1,9 @@
 package net.pitan76.cubicturret.block;
 
-import net.minecraft.block.Block;
 import net.pitan76.mcpitanlib.api.block.v2.BlockSettingsBuilder;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.CompatibleMaterial;
-import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
+import net.pitan76.mcpitanlib.midohra.block.TypedBlockWrapper;
 
 import static net.pitan76.cubicturret.CubicTurret._id;
 import static net.pitan76.cubicturret.CubicTurret.registry;
@@ -15,25 +14,25 @@ public class Blocks {
             .material(CompatibleMaterial.METAL)
             .strength(2.5F, 6.0F);
 
-    public static RegistryResult<Block> TURRET_BASE;
+    public static TypedBlockWrapper<TurretBaseBlock> TURRET_BASE;
 
-    public static RegistryResult<Block> CUBIC_TURRET_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_BLOCK;
 
-    public static RegistryResult<Block> CUBIC_TURRET_LV2_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_LV2_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_LV2_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_LV2_BLOCK;
 
-    public static RegistryResult<Block> CUBIC_TURRET_LV3_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_LV3_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_LV3_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_LV3_BLOCK;
 
-    public static RegistryResult<Block> CUBIC_TURRET_LV4_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_LV4_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_LV4_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_LV4_BLOCK;
 
-    public static RegistryResult<Block> CUBIC_TURRET_LV5_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_LV5_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_LV5_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_LV5_BLOCK;
 
-    public static RegistryResult<Block> CUBIC_TURRET_INF_BLOCK;
-    public static RegistryResult<Block> DOUBLE_CUBIC_TURRET_INF_BLOCK;
+    public static TypedBlockWrapper<CubicTurretBlock> CUBIC_TURRET_INF_BLOCK;
+    public static TypedBlockWrapper<DoubleCubicTurretBlock> DOUBLE_CUBIC_TURRET_INF_BLOCK;
 
     public static void init() {
         TURRET_BASE = registry.registerBlock(_id("turret_base"), () -> new TurretBaseBlock(CompatibleBlockSettings
