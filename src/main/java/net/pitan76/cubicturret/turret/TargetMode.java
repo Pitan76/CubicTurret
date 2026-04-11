@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public class TargetMode {
     public static final TargetMode ANIMAL = new TargetMode("animal", entity -> entity.instanceOf(AnimalEntity.class));
-    public static final TargetMode MONSTER = new TargetMode("monster", entity -> entity.getType().getSpawnGroup().equals(SpawnGroup.MONSTER));
+    public static final TargetMode MONSTER = new TargetMode("monster", entity -> entity.getSpawnGroup().equals(SpawnGroup.MONSTER));
     public static final TargetMode PLAYER = new TargetMode("player", entity -> entity.instanceOf(PlayerEntity.class));
     public static final TargetMode NON_PLAYER = new TargetMode("non_player", entity -> !entity.instanceOf(PlayerEntity.class));
     public static final TargetMode PHANTOM_ONLY = new TargetMode("phantom_only", entity -> entity.instanceOf(PhantomEntity.class));

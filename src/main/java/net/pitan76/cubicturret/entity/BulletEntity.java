@@ -13,6 +13,7 @@ import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
+import net.pitan76.mcpitanlib.midohra.util.math.Vector3d;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,8 +34,8 @@ public class BulletEntity extends CompatThrownItemEntity {
         super((EntityType<? extends CompatThrownItemEntity>) entityType, world);
     }
 
-    public BulletEntity(net.minecraft.world.World world, double x, double y, double z, CubicTurretBlockEntity turret) {
-        super((EntityType<? extends CompatThrownItemEntity>) Entities.BULLET_ENTITY.get(), x, y, z, world);
+    public BulletEntity(World world, Vector3d pos, CubicTurretBlockEntity turret) {
+        super((EntityType<? extends CompatThrownItemEntity>) Entities.BULLET_ENTITY.get(), pos.x, pos.y, pos.z, world.toMinecraft());
         this.turret = turret;
     }
 
@@ -97,9 +98,5 @@ public class BulletEntity extends CompatThrownItemEntity {
 
     public ItemWrapper getDefaultItemWrapper() {
         return MCItems.FIRE_CHARGE;
-    }
-
-    public void setStack(ItemStack stack) {
-        callSetItem(stack.toMinecraft());
     }
 }

@@ -2,6 +2,7 @@ package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.entity.BlockEntityType;
 import net.pitan76.cubicturret.block.AbstractCubicTurretBlock;
+import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
@@ -11,7 +12,6 @@ import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.util.math.Vector3d;
-import net.pitan76.mcpitanlib.midohra.util.math.Vector3i;
 import net.pitan76.mcpitanlib.midohra.world.World;
 
 public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
@@ -34,7 +34,7 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
         if (level == 0) {
             BlockWrapper block = e.getBlockWrapper();
             if (block.instanceOf(CubicTurretBlock.class)) {
-                level = ((CubicTurretBlock) block.get()).getLevel();
+                level = ((CubicTurretBlock) block.getOrDefault(Blocks.DOUBLE_CUBIC_TURRET_BLOCK.get())).getLevel();
                 if (level == 0) level = 1;
             }
         }
@@ -75,11 +75,13 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
 
         float divergence = getDivergence();
 
-        shoot(e, vx, vy, vz, divergence, shift, bulletStack);
+        Vector3d velocity = new Vector3d(vx, vy, vz);
+
+        shoot(e, velocity, divergence, shift, bulletStack);
         return true;
     }
 
-    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, double shift, ItemStack bulletStack) {
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, Vector3d velocity, float divergence, double shift, ItemStack bulletStack) {
         double shiftX = 0;
         double shiftZ = 0;
         
@@ -94,7 +96,7 @@ public class DoubleCubicTurretBlockEntity extends CubicTurretBlockEntity {
             shiftZ += shift;
         }
 
-        BlockPos pos = e.getMidohraPos();
-        shoot(e, pos.getX() + 0.5 + shiftX, pos.getY() + 0.8, pos.getZ() + 0.5 + shiftZ, vx, vy, vz, divergence, bulletStack);
+        Vector3d pos = e.getMidohraPos().toCenterVector3d().add(shiftX, 0.3, shiftZ);
+        shoot(e, pos, velocity, divergence, bulletStack);
     }
 }

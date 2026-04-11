@@ -2,16 +2,13 @@ package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.SmallFireballEntity;
-import net.minecraft.entity.projectile.SpectralArrowEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.FireChargeItem;
 import net.minecraft.item.SnowballItem;
 import net.minecraft.item.SpectralArrowItem;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
+import net.pitan76.cubicturret.block.Blocks;
 import net.pitan76.cubicturret.block.CubicTurretBlock;
 import net.pitan76.cubicturret.entity.BulletEntity;
 import net.pitan76.cubicturret.item.Items;
@@ -34,13 +31,10 @@ import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
 import net.pitan76.mcpitanlib.api.util.*;
 import net.pitan76.mcpitanlib.api.util.collection.ItemStackList;
-import net.pitan76.mcpitanlib.api.util.entity.ArrowEntityUtil;
-import net.pitan76.mcpitanlib.api.util.entity.SmallFireballEntityUtil;
-import net.pitan76.mcpitanlib.api.util.entity.SnowballEntityUtil;
-import net.pitan76.mcpitanlib.api.util.entity.SpectralArrowEntityUtil;
 import net.pitan76.mcpitanlib.api.util.math.random.CompatRandom;
 import net.pitan76.mcpitanlib.midohra.block.BlockWrapper;
 import net.pitan76.mcpitanlib.midohra.entity.EntityWrapper;
+import net.pitan76.mcpitanlib.midohra.entity.projectile.*;
 import net.pitan76.mcpitanlib.midohra.item.ItemStack;
 import net.pitan76.mcpitanlib.midohra.item.ItemWrapper;
 import net.pitan76.mcpitanlib.midohra.item.MCItems;
@@ -101,7 +95,7 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (level == 0) {
             BlockWrapper block = e.getBlockWrapper();
             if (block.instanceOf(CubicTurretBlock.class)) {
-                level = ((CubicTurretBlock) block.get()).getLevel();
+                level = ((CubicTurretBlock) block.getOrDefault(Blocks.CUBIC_TURRET_BLOCK.get())).getLevel();
                 if (level == 0) level = 1;
             }
         }
@@ -173,43 +167,46 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
     }
 
     public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
-        BlockPos pos = e.getMidohraPos();
-        shoot(e, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, vx, vy, vz, divergence, bulletStack);
+        Vector3d pos = e.getMidohraPos().toCenterVector3d().add(0, 0.3, 0);
+        Vector3d velocity = new Vector3d(vx, vy, vz);
+        shoot(e, pos, velocity, divergence, bulletStack);
     }
 
-    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, double x, double y, double z, double vx, double vy, double vz, float divergence, ItemStack bulletStack) {
+    public void shoot(TileTickEvent<CubicTurretBlockEntity> e, Vector3d _pos, Vector3d velocity, float divergence, ItemStack bulletStack) {
         ItemWrapper item = bulletStack.getItem();
         World world = e.getMidohraWorld();
+        Vector3d pos = _pos.add(velocity);
 
         if (item.instanceOf(FireChargeItem.class)) {
-            SmallFireballEntity fireball = SmallFireballEntityUtil.create(e.world, x + vx, y + vy, z + vz, vx, vy, vz);
-            SmallFireballEntityUtil.setItem(fireball, bulletStack.toMinecraft());
+            SmallFireballEntityWrapper fireball = SmallFireballEntityWrapper.create(world, pos, velocity);
+            fireball.setStack(bulletStack);
             world.spawnEntity(fireball);
             return;
         }
         if (item.instanceOf(ArrowItem.class)) {
-            ArrowEntity arrow = ArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz, bulletStack.toMinecraft());
-            ArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
+            ArrowEntityWrapper arrow = ArrowEntityWrapper.create(world, pos, bulletStack);
+            arrow.setVelocity(velocity, 1.0f, divergence);
             world.spawnEntity(arrow);
             return;
         }
         if (item.instanceOf(SpectralArrowItem.class)) {
-            SpectralArrowEntity arrow = SpectralArrowEntityUtil.create(e.world, x + vx, y + vy, z + vz);
-            SpectralArrowEntityUtil.setVelocity(arrow, vx, vy, vz, 1.0f, divergence);
+            SpectralArrowEntityWrapper arrow = SpectralArrowEntityWrapper.create(world, pos);
+            arrow.setVelocity(velocity, 1.0f, divergence);
             world.spawnEntity(arrow);
             return;
         }
         if (item.instanceOf(SnowballItem.class)) {
-            SnowballEntity snowball = SnowballEntityUtil.create(e.world, x + vx, y + vy, z + vz);
-            SnowballEntityUtil.setItem(snowball, bulletStack.toMinecraft());
-            SnowballEntityUtil.setVelocity(snowball, vx, vy, vz, 1.0f, divergence);
+            SnowballEntityWrapper snowball = SnowballEntityWrapper.create(world, pos);
+            snowball.setStack(bulletStack);
+            snowball.setVelocity(velocity, 1.0f, divergence);
             world.spawnEntity(snowball);
             return;
         }
 
-        BulletEntity bullet = new BulletEntity(e.world, x + vx, y + vy, z + vz, this);
+        ThrownItemEntityWrapper<BulletEntity> bullet = ThrownItemEntityWrapper.ofRaw(new BulletEntity(world, pos, this));
+
         bullet.setStack(bulletStack);
-        bullet.setVelocity(vx, vy, vz, getBulletSpeed() + 2.0f, divergence);
+        bullet.setVelocity(velocity, getBulletSpeed() + 2.0f, divergence);
         world.spawnEntity(bullet);
 
         CompatRandom random = world.getRandom();
@@ -222,7 +219,6 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         if (targetMode == TargetMode.NONE) return new ArrayList<>();
 
         World world = e.getMidohraWorld();
-
         Vector3d pos = e.getMidohraPos().toVector3d();
 
         // MobEntity
