@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "itemalchemy:item/turret_base"
+    "model": "cubicturret:item/turret_base"
   }
 }
