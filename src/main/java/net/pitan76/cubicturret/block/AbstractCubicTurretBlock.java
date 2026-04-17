@@ -10,9 +10,7 @@ import net.pitan76.mcpitanlib.api.state.property.CompatProperties;
 import net.pitan76.mcpitanlib.api.state.property.DirectionProperty;
 import net.pitan76.mcpitanlib.api.util.CompatActionResult;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.shape.VoxelShape;
-import net.pitan76.cubicturret.tile.BlockEntities;
 import net.pitan76.cubicturret.tile.CubicTurretBlockEntity;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
 import net.pitan76.mcpitanlib.api.block.v2.CompatBlock;
@@ -22,7 +20,6 @@ import net.pitan76.mcpitanlib.api.util.TextUtil;
 import net.pitan76.mcpitanlib.api.util.VoxelShapeUtil;
 import net.pitan76.mcpitanlib.midohra.block.BlockState;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -33,11 +30,6 @@ public abstract class AbstractCubicTurretBlock extends CompatBlock implements Ex
     public AbstractCubicTurretBlock(CompatibleBlockSettings settings) {
         super(settings);
         setDefaultState(getDefaultMidohraState().with(FACING, Direction.NORTH));
-    }
-
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityType<T> getBlockEntityType() {
-        return (BlockEntityType<T>) BlockEntities.CUBIC_TURRET.get();
     }
 
     @Override

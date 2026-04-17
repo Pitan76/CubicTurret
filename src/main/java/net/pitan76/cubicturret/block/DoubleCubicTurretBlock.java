@@ -19,7 +19,7 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
     }
 
     @Override
-    public VoxelShape getShape(Direction direction) {
+    public VoxelShape getShape(Direction dir) {
         VoxelShape cannon = VoxelShapeUtil.union(
                 VoxelShapeUtil.cuboid(0.375, 0.875, 0.5625, 0.4375, 0.9375, 0.75),
                 VoxelShapeUtil.cuboid(0.375, 0.8125, 0.5, 0.4375, 1, 0.5625),
@@ -28,7 +28,7 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
                 VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.5, 0.625, 1, 0.5625),
                 VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.4375, 0.625, 0.9375, 0.5));
 
-        if (direction.equals(Direction.SOUTH)) {
+        if (dir.equals(Direction.SOUTH)) {
             cannon = VoxelShapeUtil.union(
                     VoxelShapeUtil.cuboid(0.375, 0.875, 0.25, 0.4375, 0.9375, 0.4375),
                     VoxelShapeUtil.cuboid(0.375, 0.8125, 0.4375, 0.4375, 1, 0.5),
@@ -36,7 +36,7 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
                     VoxelShapeUtil.cuboid(0.5625, 0.875, 0.25, 0.625, 0.9375, 0.4375),
                     VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.4375, 0.625, 1, 0.5),
                     VoxelShapeUtil.cuboid(0.5625, 0.8125, 0.5, 0.625, 0.9375, 0.5625));
-        } else if (direction.equals(Direction.EAST)) {
+        } else if (dir.equals(Direction.EAST)) {
             cannon = VoxelShapeUtil.union(
                     VoxelShapeUtil.cuboid(0.25, 0.875, 0.375, 0.4375, 0.9375, 0.4375),
                     VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.375, 0.5, 1, 0.4375),
@@ -44,7 +44,7 @@ public class DoubleCubicTurretBlock extends CubicTurretBlock {
                     VoxelShapeUtil.cuboid(0.25, 0.875, 0.5625, 0.4375, 0.9375, 0.625),
                     VoxelShapeUtil.cuboid(0.4375, 0.8125, 0.5625, 0.5, 1, 0.625),
                     VoxelShapeUtil.cuboid(0.5, 0.8125, 0.5625, 0.5625, 0.9375, 0.625));
-        } else if (direction.equals(Direction.WEST)) {
+        } else if (dir.equals(Direction.WEST)) {
             cannon = VoxelShapeUtil.union(
                     VoxelShapeUtil.cuboid(0.5625, 0.875, 0.375, 0.75, 0.9375, 0.4375),
                     VoxelShapeUtil.cuboid(0.5, 0.8125, 0.375, 0.5625, 1, 0.4375),

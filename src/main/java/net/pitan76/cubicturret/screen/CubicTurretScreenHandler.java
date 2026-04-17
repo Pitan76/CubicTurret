@@ -10,10 +10,11 @@ import net.pitan76.mcpitanlib.api.util.ItemStackUtil;
 import net.pitan76.mcpitanlib.api.util.ScreenHandlerUtil;
 import net.pitan76.mcpitanlib.api.util.SlotUtil;
 import net.pitan76.mcpitanlib.api.util.inventory.CompatInventory;
+import net.pitan76.mcpitanlib.api.util.inventory.CompatPlayerInventory;
 
 public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
-    public PlayerInventory playerInventory;
+    public CompatPlayerInventory playerInventory;
     public Inventory inventory;
 
     public CubicTurretScreenHandler(int syncId, PlayerInventory playerInventory) {
@@ -22,7 +23,7 @@ public class CubicTurretScreenHandler extends SimpleScreenHandler {
 
     public CubicTurretScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(ScreenHandlers.CUBIC_TURRET.getOrNull(), syncId);
-        this.playerInventory = playerInventory;
+        this.playerInventory = new CompatPlayerInventory(playerInventory);
         this.inventory = inventory;
 
         addSlots(inventory, 0, 62, 17, 18, 3, 3);
