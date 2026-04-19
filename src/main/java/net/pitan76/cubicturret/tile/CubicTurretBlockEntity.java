@@ -2,10 +2,6 @@ package net.pitan76.cubicturret.tile;
 
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.FireChargeItem;
-import net.minecraft.item.SnowballItem;
-import net.minecraft.item.SpectralArrowItem;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.pitan76.cubicturret.block.Blocks;
@@ -177,25 +173,25 @@ public class CubicTurretBlockEntity extends CompatBlockEntity implements ExtendB
         World world = e.getMidohraWorld();
         Vector3d pos = _pos.add(velocity);
 
-        if (item.instanceOf(FireChargeItem.class)) {
+        if (item.instanceOf(MCItems.FIRE_CHARGE)) {
             SmallFireballEntityWrapper fireball = SmallFireballEntityWrapper.create(world, pos, velocity);
             fireball.setStack(bulletStack);
             world.spawnEntity(fireball);
             return;
         }
-        if (item.instanceOf(ArrowItem.class)) {
-            ArrowEntityWrapper arrow = ArrowEntityWrapper.create(world, pos, bulletStack);
-            arrow.setVelocity(velocity, 1.0f, divergence);
-            world.spawnEntity(arrow);
-            return;
-        }
-        if (item.instanceOf(SpectralArrowItem.class)) {
+        if (item.instanceOf(MCItems.SPECTRAL_ARROW)) {
             SpectralArrowEntityWrapper arrow = SpectralArrowEntityWrapper.create(world, pos);
             arrow.setVelocity(velocity, 1.0f, divergence);
             world.spawnEntity(arrow);
             return;
         }
-        if (item.instanceOf(SnowballItem.class)) {
+        if (item.instanceOf(MCItems.ARROW)) {
+            ArrowEntityWrapper arrow = ArrowEntityWrapper.create(world, pos, bulletStack);
+            arrow.setVelocity(velocity, 1.0f, divergence);
+            world.spawnEntity(arrow);
+            return;
+        }
+        if (item.instanceOf(MCItems.SNOWBALL)) {
             SnowballEntityWrapper snowball = SnowballEntityWrapper.create(world, pos);
             snowball.setStack(bulletStack);
             snowball.setVelocity(velocity, 1.0f, divergence);
